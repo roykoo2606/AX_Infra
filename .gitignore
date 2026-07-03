@@ -1,0 +1,17 @@
+# OS
+.DS_Store
+
+# Obsidian (viewer only — machine-local settings stay local)
+.obsidian/
+
+# Secrets — never commit
+.env
+.env.*
+*.secret
+*token*
+*credential*
+
+# Dependencies / temp
+node_modules/
+__pycache__/
+*.log.tmp
