@@ -97,7 +97,16 @@ AX_Infra/  (= Git 저장소 루트, Obsidian vault)
 - [ ] 에이전트 역할 분담: 오케스트레이터는 누구? (Claude Code 추천) 하위 에이전트 배치는?
 - [ ] Hermes(Discord) 연동 구성 방법
 - [ ] 로컬 LLM 도입 시점과 용도
-- [ ] GitHub 저장소 이름·구조, 민감정보(.env, 토큰) 관리 방식
+- [ ] 민감정보(.env, 토큰) 관리 방식
+
+## 보류 항목 (키워드로 나중에 진행)
+
+- **[GitHub-연동]**: push 및 이중 계정(roykoo83/roykoo2606) 설정. 가이드는 `docs/github-dual-account.md`에 준비됨. 쉬운 방법 = `gh auth login` 브라우저 로그인 (아래 3줄). SSH 방식은 나중에 필요해지면
+  ```bash
+  brew install gh
+  gh auth login   # 브라우저에서 roykoo2606 로그인
+  cd ~/Claude/Projects/AX_Infra && rm -f .git/index.lock && git add -A && git commit -m "docs" && git push -u origin main
+  ```
 
 ## 9. 참고
 
