@@ -4,7 +4,7 @@
 
 ## 완료 조건
 
-- [ ] GitHub private 저장소 생성 및 이 폴더 push
+- [x] GitHub private 저장소 생성 및 이 폴더 push (2026-07-05, roykoo2606/AX_Infra)
 - [ ] 상시가동 맥 준비 (잠자기 방지 + 재부팅 자동 기동)
 - [ ] Hermes(Discord)로 원격 지시 → 처리 → 결과 확인 흐름 1회 성공
 - [ ] `bootstrap.sh`로 다른 머신에서 환경 복원 검증

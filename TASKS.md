@@ -12,16 +12,21 @@
 
 | ID | 작업 | 담당(예정) | 등록 | 비고 |
 |---|---|---|---|---|
-| T-20260705-03 | Phase 3: 자동 기동(launchd) + bootstrap 갱신 | Claude | 2026-07-05 | [GitHub-연동] 선행 권장 |
+| T-20260707-02 | Urban_AX 데이터 이관 | Claude Code(CLI) + Roy | 2026-07-07 | Roy가 실데이터를 1건씩 분석하며 진행. 인계서: logs/handoff_T-20260707-02.md |
 | T-20260705-04 | Phase 4: Hermes(Discord) 연동 | Claude+Roy | 2026-07-05 | 설치 상태 확인 필요. 주입용 지침 준비됨: docs/hermes-instructions.md |
 | T-20260705-05 | Phase 5: GDrive 감시 에이전트 | Antigravity | 2026-07-05 | 감시 대상 폴더 미정 |
 | T-20260705-06 | Phase 6: 대시보드 v1 (STATUS.md + Discord) | Claude | 2026-07-05 | |
-| T-20260703-01 | [GitHub-연동] gh auth login 후 push | Roy | 2026-07-03 | 진행 중 — 3단계 명령 전달됨 (2026-07-05) |
 
 ## 완료 (최근 10건만 유지 — 상세는 logs/)
 
 | ID | 작업 | 담당 | 완료일 |
 |---|---|---|---|
+| T-20260706-02 | AX_Infra 문서 목록 정리 | Hermes | 2026-07-06 |
+| T-20260706-01 | Hermes 모바일 창구 스킬 설정 | Hermes | 2026-07-06 |
 | T-20260705-01 | Phase 1: 공유 작업 보드(TASKS.md) 도입 | Claude (Cowork) | 2026-07-05 |
 | T-20260705-02 | Phase 2: 표준 세션 스크립트(scripts/start.sh) | Claude (Cowork) | 2026-07-05 |
 | T-20260705-07 | cmux 설치 | Roy | 2026-07-05 |
+| T-20260705-03 | Phase 3: 자동 기동 — 맥 설치·검증 완료 | Claude+Roy | 2026-07-05 |
+| T-20260705-04 | Phase 4: Hermes 연동 — 스킬 주입·실전 테스트 통과 | Hermes+Roy | 2026-07-06 |
+| T-20260707-01 | Urban_AX 전달 킷 분석·통합 (CONSTITUTION v0.3, vault/, 툴체인) | Claude (Cowork) | 2026-07-07 |
+| T-20260703-01 | [GitHub-연동] 로그인·초기 push (roykoo2606/AX_Infra) | Roy | 2026-07-05 |

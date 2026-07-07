@@ -1,4 +1,4 @@
-# CONSTITUTION — AX_Infra 전체 규약 (v0.2)
+# CONSTITUTION — AX_Infra 전체 규약 (v0.3)
 
 > 모든 에이전트(Claude Code, Codex, Antigravity, 향후 로컬 LLM)에 적용되는 최상위 규약.
 > 프로젝트별 지침(projects/*/RULES.md)은 이 규약을 위반할 수 없다.
@@ -67,3 +67,18 @@
 - 자격증명은 macOS 키체인 또는 로컬 .env(git 제외)에만 보관
 - 외부 서비스 연동 시 최소 권한 토큰 사용
 - 회사 데이터가 포함된 파일은 개인 계정 저장소로 절대 push하지 않는다
+
+## 9. 작업 무결성 (Urban_AX 계약 채택, 2026-07-07)
+
+- **원본 불변**: raw-source(원본 자료)는 append-only. 무단 수정·삭제·이동 금지
+- **Anti-Rollback**: 사용자의 수동 수정을 되돌리지 않는다. 작업 전 `git status --short`로 변경 확인
+- **검증 기계화**: 규칙은 선언이 아니라 도구로 강제한다. vault/ 작업은 린터 ERROR 0이 완료 조건
+- **Handoff**: 에이전트 간 작업 인계는 WORKFLOW §7 양식을 따른다
+
+## 10. 지식 볼트 (vault/)
+
+- `vault/`는 PARA 구조(00. Inbox ~ 04. Archive)의 지식 저장소. 운영 인프라(규약·TASKS·logs·scripts)와 분리한다
+- vault/ 안의 문서는 **Frontmatter v3 표준**(`01_contract/frontmatter_standard_v3.md`) 필수. 운영 파일에는 적용하지 않는다
+- 온톨로지 스키마: `01_contract/ontology_schema.md` | 검증: `python3 scripts/vault/vault_linter.py`
+- 반입 금지 목록(`04_manifest/exclusion_list.md`)은 절대 규칙
+- `01_contract/`~`04_manifest/`는 전달 킷 원본 — 수정하지 않는다 (이관 완료 후 아카이브)

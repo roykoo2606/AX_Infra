@@ -6,8 +6,11 @@
 #   접속:  tmux attach -t ax         # cmux 패인에서는: tmux attach -t ax:<창이름>
 #   종료:  tmux kill-session -t ax
 #
-# 창 구성: claude(오케스트레이터) / codex(워커) / anti(워커) / watcher(감시, Phase 5)
-# cmux 사용: cmux에서 패인 4개로 분할(new-split) 후 각 패인에서 위 attach 명령 입력
+# 창 구성: claude(오케스트레이터) / codex(워커) / anti(워커) / watcher(감시, Phase 5) / hermes(모바일 창구)
+# cmux 사용: cmux에서 패인을 분할(new-split)한 뒤 각 패인에서 위 attach 명령 입력
+# 주의: Hermes 자체 launchd 서비스(ai.hermes.gateway)가 켜져 있으면 게이트웨이가 중복 실행됨
+#       → 확인: launchctl list | grep ai.hermes.gateway
+#       → 해제: launchctl unload ~/Library/LaunchAgents/ai.hermes.gateway.plist
 
 SESSION="ax"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -26,6 +29,7 @@ tmux new-session -d -s "$SESSION" -n claude  -c "$ROOT"
 tmux new-window  -t "$SESSION"    -n codex   -c "$ROOT"
 tmux new-window  -t "$SESSION"    -n anti    -c "$ROOT"
 tmux new-window  -t "$SESSION"    -n watcher -c "$ROOT"
+tmux new-window  -t "$SESSION"    -n hermes  -c "$ROOT"
 
 # 각 창: 역할 배너 → 에이전트 CLI가 설치돼 있으면 자동 실행
 boot() {
@@ -40,7 +44,9 @@ boot anti    "단순작업 워커 (Antigravity)" \
      "command -v antigravity >/dev/null && antigravity || echo 'antigravity CLI 미설치 — 설치 후 이 창에서 직접 실행'"
 boot watcher "감시 자동화 — Phase 5에서 구성" \
      "echo '대기 중 (Phase 5: GDrive 감시)'"
+boot hermes  "모바일 창구 (Hermes gateway, 크래시 시 5초 후 자동 재시작)" \
+     "command -v hermes >/dev/null && while true; do hermes gateway; echo '[hermes] 종료됨 — 5초 후 재시작 (중단: Ctrl+C 두 번)'; sleep 5; done || echo 'hermes 미설치 — curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash'"
 
 tmux select-window -t "$SESSION:claude"
-echo "[ax] 세션 시작됨: claude / codex / anti / watcher"
+echo "[ax] 세션 시작됨: claude / codex / anti / watcher / hermes"
 echo "     접속: tmux attach -t ax"
