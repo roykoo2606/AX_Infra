@@ -7,16 +7,16 @@
 
 | ID | 작업 | 담당 | 시작 | 최근 갱신 | 비고 |
 |---|---|---|---|---|---|
+| T-20260705-06 | Phase 6: 대시보드 v1 (STATUS.md 자동생성 + Discord) | Claude Code + codexx | 2026-07-08 | 2026-07-08 | STATUS.md 생성기(scripts/status.sh) 완료(codexx 구현·검수 통과). **잔여: Discord #status 발송**(Hermes 경유·채널/webhook 설정 필요) |
 
 ## 대기
 
 | ID | 작업 | 담당(예정) | 등록 | 비고 |
 |---|---|---|---|---|
 | T-20260707-02 | Urban_AX 데이터 이관 | Claude Code(CLI) + Roy | 2026-07-07 | Roy가 실데이터를 1건씩 분석하며 진행. 인계서: logs/handoff_T-20260707-02.md |
-| T-20260708-01 | agyx 워커 전환 클리닝 (전역 오케스트레이션 제거) | agyx + Roy | 2026-07-08 | 프롬프트: docs/agyx-worker-cleanup.md — agyx 패인에 붙여넣기 |
-| T-20260705-04 | Phase 4: Hermes(Discord) 연동 | Claude+Roy | 2026-07-05 | 설치 상태 확인 필요. 주입용 지침 준비됨: docs/hermes-instructions.md |
-| T-20260705-05 | Phase 5: GDrive 감시 에이전트 | Antigravity | 2026-07-05 | 감시 대상 폴더 미정 |
-| T-20260705-06 | Phase 6: 대시보드 v1 (STATUS.md + Discord) | Claude | 2026-07-05 | |
+| T-20260708-01 | agyx 워커 전환 클리닝 (전역 오케스트레이션 제거) | agyx + Roy | 2026-07-08 | 프롬프트: docs/agyx-worker-cleanup.md — Roy 진행 중 |
+| T-20260708-05 | codexx·agyx 기본 모델 실제 설정 반영 확인 (WORKFLOW §5-1) | Roy | 2026-07-08 | codexx=GPT-5.5(medium), agyx=Gemini 3.5 Flash(high) |
+| T-20260705-05 | Phase 5: GDrive 감시 에이전트 | agyx (Antigravity) | 2026-07-05 | 감시 대상 폴더 미정 (Roy 확인 필요) |
 
 ## 완료 (최근 10건만 유지 — 상세는 logs/)
 
