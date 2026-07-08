@@ -13,6 +13,7 @@
 | ID | 작업 | 담당(예정) | 등록 | 비고 |
 |---|---|---|---|---|
 | T-20260707-02 | Urban_AX 데이터 이관 | Claude Code(CLI) + Roy | 2026-07-07 | Roy가 실데이터를 1건씩 분석하며 진행. 인계서: logs/handoff_T-20260707-02.md |
+| T-20260708-01 | agyx 워커 전환 클리닝 (전역 오케스트레이션 제거) | agyx + Roy | 2026-07-08 | 프롬프트: docs/agyx-worker-cleanup.md — agyx 패인에 붙여넣기 |
 | T-20260705-04 | Phase 4: Hermes(Discord) 연동 | Claude+Roy | 2026-07-05 | 설치 상태 확인 필요. 주입용 지침 준비됨: docs/hermes-instructions.md |
 | T-20260705-05 | Phase 5: GDrive 감시 에이전트 | Antigravity | 2026-07-05 | 감시 대상 폴더 미정 |
 | T-20260705-06 | Phase 6: 대시보드 v1 (STATUS.md + Discord) | Claude | 2026-07-05 | |
@@ -21,6 +22,8 @@
 
 | ID | 작업 | 담당 | 완료일 |
 |---|---|---|---|
+| T-20260708-03 | 모델 효율 규약(CONSTITUTION §0) + 에이전트 기본 모델(WORKFLOW §5-1) | Claude Code | 2026-07-08 |
+| T-20260708-02 | codexx 워커 전환 클리닝 | codexx + Roy | 2026-07-08 |
 | T-20260706-02 | AX_Infra 문서 목록 정리 | Hermes | 2026-07-06 |
 | T-20260706-01 | Hermes 모바일 창구 스킬 설정 | Hermes | 2026-07-06 |
 | T-20260705-01 | Phase 1: 공유 작업 보드(TASKS.md) 도입 | Claude (Cowork) | 2026-07-05 |
@@ -29,4 +32,3 @@
 | T-20260705-03 | Phase 3: 자동 기동 — 맥 설치·검증 완료 | Claude+Roy | 2026-07-05 |
 | T-20260705-04 | Phase 4: Hermes 연동 — 스킬 주입·실전 테스트 통과 | Hermes+Roy | 2026-07-06 |
 | T-20260707-01 | Urban_AX 전달 킷 분석·통합 (CONSTITUTION v0.3, vault/, 툴체인) | Claude (Cowork) | 2026-07-07 |
-| T-20260703-01 | [GitHub-연동] 로그인·초기 push (roykoo2606/AX_Infra) | Roy | 2026-07-05 |
