@@ -1,12 +1,16 @@
-# 원본 바이너리 — 단일 출처는 Google Drive 공유 드라이브. 로컬은 작업 미러이므로 커밋하지 않는다.
-# (앞의 / 는 이 폴더 바로 아래만 지정 — parsed/archive·parsed/work 까지 걸리지 않게 한다)
-/archive/
-/work/
+# 원본 미러 — 단일 출처는 Google Drive 공유 드라이브. 읽기 전용이므로 커밋하지 않는다.
+# (앞의 / 는 이 폴더 바로 아래만 지정 — parsed/source 까지 걸리지 않게 한다)
+/source/
 
 # 개인정보 포함 — 급여명세서·급여이체증·통장사본·4대보험 완납증명 (RULES.md 참조)
-parsed/archive/03_증빙/
-parsed/archive/02_사업비/선금신청_260129/
+parsed/source/archive/03_증빙/
+parsed/source/archive/02_사업비/선금신청_260129/
 
 # MeDIAuto 조사 캡처 — 운영 시스템 내부 화면(샘플 ID 등 포함). 보고서(REPORT.md)만 커밋한다.
 output/medi-auto/screens/
 output/medi-auto/pages/
+
+# 원본을 그대로 복사만 한 파일 — source/에서 언제든 다시 가져올 수 있다.
+# 출처 기록(_출처.md)은 커밋되므로 추적성은 유지된다.
+workspace/_원본사본/*
+!workspace/_원본사본/_출처.md

@@ -21,8 +21,8 @@ STATUS_LABEL = {
 }
 
 TRACKS = [
-    ("archive", "archive/", "과거 협약·계약·행정·정산 자료 (마이그레이션)"),
-    ("work", "work/", "실제 과업 수행 자료"),
+    ("source/archive", "source/archive/", "과거 협약·계약·행정·정산 자료 (마이그레이션)"),
+    ("source/work", "source/work/", "과업 수행 원본 자료"),
 ]
 
 # Folders holding personal data (payslips, bank details, insurance certificates).
@@ -62,8 +62,10 @@ def human(n):
 def main():
     root = Path(sys.argv[1]).resolve()
     out = [f"# 자료 인덱스 — {root.name}", "",
-           "원본은 `archive/`·`work/`에, 파싱본(Markdown)은 `parsed/`에 같은 구조로 있습니다.",
-           "에이전트는 **파싱본을 읽고**, 원문 확인이 필요할 때만 원본을 엽니다.", ""]
+           "원본은 `source/`(읽기 전용)에, 파싱본(Markdown)은 `parsed/source/`에 같은 구조로 있습니다.",
+           "에이전트는 **파싱본을 읽고**, 원문 확인이 필요할 때만 원본을 엽니다.",
+           "편집이 필요하면 원본을 고치지 말고 `workspace/`로 복사해 작업합니다 "
+           "(`scripts/pull-source.sh`).", ""]
 
     grand = 0
     tally_all = {}
