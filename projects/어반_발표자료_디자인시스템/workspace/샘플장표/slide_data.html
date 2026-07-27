@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<title>데이터 수집 및 가공 현황</title>
+<style>
+:root {
+  /* Brand colors — WEB */
+  --brand-mint: #14DEAF;
+  --brand-teal: #33C3C6;
+  --brand-blue: #108CEB;
+  --brand-purple: #745CED;
+  --brand-accent: #00FFCB;
+  --brand-deep: #0A082B;
+
+  /* MEDICUS colors — IR */
+  --medicus-navy: #000050;
+  --medicus-blue: #5080F0;
+  --medicus-purple: #A050F0;
+  --medicus-cyan: #10B0E0;
+  --medicus-blue-soft: #90C0F0;
+
+  /* Typography */
+  --font-primary: "Paperlogy", "페이퍼로지", sans-serif;
+  --font-secondary: "Freesentation", sans-serif;
+
+  /* Geometry */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-pill: 999px;
+
+  --gradient-brand: linear-gradient(90deg, #14DEAF 0%, #33C3C6 34%, #108CEB 67%, #745CED 100%);
+
+  --z-bg: 0; --z-decor: 10; --z-content: 20; --z-meta: 40;
+}
+:root, [data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #0A082B;
+  --surface-1: rgba(255,255,255,.06);
+  --surface-2: rgba(255,255,255,.10);
+  --text-primary: #FFFFFF;
+  --text-secondary: rgba(255,255,255,.72);
+  --text-tertiary: rgba(255,255,255,.52);
+  --border: rgba(144,192,240,.24);
+  --grid-line: rgba(144,192,240,.16);
+  --shadow-card: 0 24px 56px -20px rgba(0,0,80,.72);
+}
+[data-theme="light"] {
+  color-scheme: light;
+  --canvas: #FFFFFF;
+  --surface-1: rgba(10,8,43,.04);
+  --surface-2: rgba(16,140,235,.08);
+  --text-primary: #0A082B;
+  --text-secondary: rgba(10,8,43,.72);
+  --text-tertiary: rgba(10,8,43,.52);
+  --border: rgba(10,8,43,.16);
+  --grid-line: rgba(10,8,43,.10);
+  --shadow-card: 0 24px 56px -20px rgba(0,0,80,.28);
+}
+
+* { margin:0; padding:0; box-sizing:border-box }
+html, body { width:1600px; height:900px; overflow:hidden }
+body {
+  background: var(--canvas);
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+/* type scale — design.md §4.2 */
+.t-h2 { font-size:40px; font-weight:700; line-height:1.2; letter-spacing:-.025em; word-break:keep-all }
+.t-h3 { font-size:28px; font-weight:700; line-height:1.28; letter-spacing:-.015em }
+.t-eyebrow { font-size:15px; font-weight:800; line-height:1.2; letter-spacing:.12em }
+.t-body { font-size:18px; font-weight:400; line-height:1.6; letter-spacing:-.01em }
+.t-caption { font-size:13px; font-weight:600; line-height:1.45; letter-spacing:.01em }
+.t-meta { font-family:var(--font-secondary); font-size:12px; font-weight:500; line-height:1.45; letter-spacing:.05em }
+
+.slide { position:relative; width:1600px; height:900px; overflow:hidden }
+
+/* subtle brand glow — decoration layer */
+.decor {
+  position:absolute; inset:0; z-index:var(--z-decor); pointer-events:none;
+  background: radial-gradient(760px 520px at 88% 8%, rgba(116,92,237,.20), transparent 62%),
+              radial-gradient(620px 460px at 4% 96%, rgba(16,140,235,.16), transparent 60%);
+}
+.edge { position:absolute; left:0; top:0; bottom:0; width:6px; background:var(--gradient-brand); z-index:var(--z-decor) }
+
+/* meta bar — y=54, h=24 */
+.meta-bar {
+  position:absolute; left:78px; right:70px; top:54px; height:24px; z-index:var(--z-meta);
+  display:flex; justify-content:space-between; align-items:center;
+  font-family:var(--font-secondary); font-size:12px; font-weight:500; letter-spacing:.05em;
+  color:var(--text-tertiary);
+}
+.meta-bar__brand { color:var(--text-secondary); font-weight:700; letter-spacing:.14em }
+
+/* title band — y=126 */
+.slide-title { position:absolute; left:78px; right:70px; top:126px; z-index:var(--z-content) }
+.slide-title .t-eyebrow { margin:0 0 12px; color:var(--brand-blue) }
+.slide-title .t-h2 { margin:0; max-width:1180px }
+.slide-title .t-h2 em { font-style:normal; color:var(--brand-mint) }
+
+/* content — y=286, bottom 118 */
+.slide-content { position:absolute; left:78px; right:70px; top:286px; bottom:118px; z-index:var(--z-content) }
+.grid-12 { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); column-gap:24px }
+.span-4 { grid-column:span 4 }
+.span-12 { grid-column:1 / -1 }
+
+/* KPI tiles — design.md §6.7 */
+.kpi-row { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); column-gap:24px; margin-bottom:24px }
+.kpi-tile {
+  min-height:180px; padding:24px;
+  border:1px solid var(--border); border-radius:var(--radius-md);
+  background:var(--surface-1);
+  display:flex; flex-direction:column; justify-content:space-between;
+}
+.kpi-tile__label { color:var(--text-secondary); font:600 13px/1.45 var(--font-secondary) }
+.kpi-tile__value { color:var(--text-primary); font:900 56px/1 var(--font-primary); letter-spacing:-.03em }
+.kpi-tile__value span { margin-left:4px; color:var(--brand-mint); font-size:28px }
+.kpi-tile__note { color:var(--text-tertiary); font:500 13px/1.45 var(--font-primary) }
+/* bottleneck tile — accent underline per §3.3 (accent only on key figure) */
+.kpi-tile--watch { border-color:rgba(0,255,203,.34) }
+.kpi-tile--watch .kpi-tile__value { box-shadow:inset 0 -6px 0 -2px var(--brand-accent) ; width:fit-content }
+.kpi-tile--watch .kpi-tile__value span { color:var(--brand-accent) }
+
+/* data table — design.md §6.8 */
+.data-table { width:100%; border-collapse:collapse; table-layout:fixed; font-size:18px }
+.data-table th, .data-table td {
+  height:64px; padding:14px 16px; border-bottom:1px solid var(--grid-line);
+  text-align:right; vertical-align:middle;
+}
+.data-table thead th { color:var(--brand-mint); font-weight:700; background:var(--surface-2) }
+.data-table th:first-child, .data-table td:first-child { text-align:left }
+.data-table tbody th { color:var(--text-primary); font-weight:700 }
+.data-table td { color:var(--text-secondary); font-weight:400; font-variant-numeric:tabular-nums }
+.data-table td.total { color:var(--text-primary); font-weight:700 }
+.data-table tbody tr:last-child th, .data-table tbody tr:last-child td { border-bottom:none }
+
+/* footer — y=816 */
+.footer-rule {
+  position:absolute; left:78px; right:70px; top:816px; height:38px; z-index:var(--z-meta);
+  display:flex; justify-content:space-between; align-items:flex-start;
+  padding-top:14px; border-top:1px solid var(--grid-line);
+  font-family:var(--font-secondary); font-size:12px; font-weight:500; letter-spacing:.05em;
+  color:var(--text-tertiary);
+}
+</style>
+</head>
+<body>
+<main class="slide" data-slide-type="data">
+  <div class="decor" aria-hidden="true"></div>
+  <div class="edge" aria-hidden="true"></div>
+
+  <header class="meta-bar">
+    <span class="meta-bar__brand">URBAN DATA LAB</span>
+    <span>2026 질병관리청 공간전사체 · 2차년도 중간보고</span>
+  </header>
+
+  <section class="slide-title">
+    <p class="t-eyebrow">DATA COLLECTION &amp; ANNOTATION</p>
+    <h1 class="t-h2">계약 기준 3,000건의 <em>2배</em>를 확보했고, 1차 가공은 97% 완료했습니다</h1>
+  </section>
+
+  <section class="slide-content">
+    <div class="kpi-row">
+      <article class="kpi-tile span-4">
+        <p class="kpi-tile__label">수집 이미지</p>
+        <p class="kpi-tile__value">6,122<span>건</span></p>
+        <p class="kpi-tile__note">계약 요건 3,000건 대비 204% · 3개 조직 각 1,000건 충족</p>
+      </article>
+      <article class="kpi-tile span-4">
+        <p class="kpi-tile__label">1차 어노테이션</p>
+        <p class="kpi-tile__value">5,959<span>건</span></p>
+        <p class="kpi-tile__note">수집 대비 97.3% 완료</p>
+      </article>
+      <article class="kpi-tile kpi-tile--watch span-4">
+        <p class="kpi-tile__label">전문의 정밀 리뷰</p>
+        <p class="kpi-tile__value">1,624<span>건</span></p>
+        <p class="kpi-tile__note">어노테이션 대비 27.3% · 하반기 최우선 과제</p>
+      </article>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th scope="col">구분</th>
+          <th scope="col">위암 (STOP)</th>
+          <th scope="col">전립선암 (PROP)</th>
+          <th scope="col">난소암 (OVCA)</th>
+          <th scope="col">계</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">수집 이미지</th><td>1,037</td><td>3,556</td><td>1,529</td><td class="total">6,122</td></tr>
+        <tr><th scope="row">1차 어노테이션</th><td>1,024</td><td>3,556</td><td>1,379</td><td class="total">5,959</td></tr>
+        <tr><th scope="row">전문의 리뷰</th><td>207</td><td>852</td><td>565</td><td class="total">1,624</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer class="footer-rule">
+    <span>출처: 공간바이오마커_중간보고회_v0.5 (2026-07-27) · 계약 기준은 제안요청서</span>
+    <span>03</span>
+  </footer>
+</main>
+<script>
+  const theme = new URLSearchParams(location.search).get("theme");
+  document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+</script>
+</body>
+</html>
