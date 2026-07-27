@@ -1014,28 +1014,78 @@ sips -g pixelWidth -g pixelHeight slide-dark.png
 
 마지막 명령의 결과는 `pixelWidth: 3200`, `pixelHeight: 1800`이어야 한다.
 
-### 12.3 PNG를 PPTX에 삽입
+### 12.3 PPTX 산출 — 네이티브가 기본 규칙
 
-이미지는 16:9 슬라이드 전체를 덮는다. PowerPoint 슬라이드 크기는 13.333×7.5in이다.
+**PPTX로 만들 때는 언제나 네이티브로 만든다.** 도형·텍스트·표를 실제 PowerPoint 개체로 생성하며,
+슬라이드를 통째로 이미지로 붙이지 않는다. 디자인을 마친 뒤 PPTX화하는 모든 경우에 적용된다.
+
+이유: 발표 직전 수정은 PowerPoint에서 일어난다. 래스터 장표는 오타 하나도 고칠 수 없어 실무에서 쓸 수 없다.
+
+| 항목 | 규칙 |
+|---|---|
+| 슬라이드 배경 | 도형(사각형) 채우기. 배경 이미지 금지 |
+| 텍스트 | 모두 텍스트 상자. 이미지에 구운 글자 금지 |
+| 표 | PowerPoint 네이티브 표 |
+| 차트 | 네이티브 차트 또는 도형 조합 |
+| 이미지 | **실사 사진·현미경 이미지 등 사진 자체만** 허용 |
+| 검사 | 슬라이드당 `shape_type == PICTURE` 개수가 사진 개수와 일치해야 한다 |
+
+#### 좌표·크기 변환
+
+1600×900px 캔버스로 설계하고 아래 비율로 환산한다.
+
+| 변환 | 계수 |
+|---|---|
+| px → EMU | `× 7620` (12192000 EMU ÷ 1600px) |
+| px → pt (글자) | `× 0.6` (960pt ÷ 1600px) |
+
+즉 `t-h2` 40px는 24pt, `body` 18px는 10.8pt, `kpi` 56px는 33.6pt다.
+
+#### 폰트명 — CSS와 다르다
+
+PowerPoint는 CSS의 숫자 웨이트를 인식하지 못한다. **웨이트별 설치 폰트명을 직접 지정**한다.
+
+| CSS weight | PPTX 글꼴명 |
+|---|---|
+| 400 | `Paperlogy 4 Regular` |
+| 500 | `Paperlogy 5 Medium` |
+| 600 | `Paperlogy 6 SemiBold` |
+| 700 | `Paperlogy 7 Bold` |
+| 800 | `Paperlogy 8 ExtraBold` |
+| 900 | `Paperlogy 9 Black` |
+
+보조 서체도 같다 (`Freesentation 4 Regular` 등). `font.bold = True`로 굵기를 흉내내지 않는다.
+
+#### 표 테두리
+
+PowerPoint 표는 기본 테마 테두리와 줄무늬가 들어간다. 반드시 끈다.
+
+- `table.first_row = False`, `table.horz_banding = False`
+- 셀의 `a:lnL`·`a:lnR`·`a:lnT`는 `noFill`, `a:lnB`만 `--grid-line` 색 1px (마지막 행은 없음)
+
+#### 생성 도구
+
+`scripts/udl_pptx.py`가 위 규칙을 구현한 툴킷이다. 새로 만들지 말고 이것을 쓴다.
 
 ```python
-from pptx import Presentation
+from udl_pptx import Deck, T
 
-prs = Presentation()
-prs.slide_width = 12192000
-prs.slide_height = 6858000
-slide = prs.slides.add_slide(prs.slide_layouts[6])
-slide.shapes.add_picture(
-    "slide-dark.png",
-    0,
-    0,
-    width=prs.slide_width,
-    height=prs.slide_height,
-)
-prs.save("presentation.pptx")
+deck = Deck()                       # 1600×900 캔버스, 13.333×7.5in 슬라이드
+s = deck.slide(theme="dark")        # 배경 도형까지 자동 생성
+s.text(78, 126, 1452, 22, "DATA COLLECTION", T.EYEBROW, color=T.BLUE)
+s.rect(78, 286, 468, 180, fill=s.c["surface"], line=s.c["border"], radius=14)
+s.table(78, 490, 1452, 256, rows)   # 테두리 규칙 자동 적용
+deck.save("out.pptx")
 ```
 
-PPTX에서 재편집해야 하는 텍스트·차트는 PNG 위에 중복 배치하지 않는다. “완전 래스터 장표”와 “네이티브 편집 장표” 중 하나를 슬라이드 단위로 선택한다.
+#### 래스터가 허용되는 예외
+
+다음 두 경우만 PNG 삽입을 허용하며, 파일명에 `_raster`를 붙여 구분한다.
+
+- 외부에 열람 전용으로 배포해 편집을 막아야 할 때
+- PowerPoint로 재현 불가능한 표현(복잡한 그라디언트 메시, 블러 합성)이 장표의 핵심일 때
+
+이 경우에도 §12.2의 HTML→PNG 경로를 그대로 쓰되, 편집이 필요한 텍스트를 PNG 위에 겹쳐 놓지 않는다.
 
 ## 13. 검수 체크리스트
 
