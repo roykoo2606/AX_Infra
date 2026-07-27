@@ -1,16 +1,12 @@
 #!/bin/bash
-# AX_Infra 표준 세션 (Phase 2) — tmux 세션 하나에 에이전트 창 4개
+# AX_Infra 상시 서비스 세션 (최종 구조, 2026-07-07)
 #
-# 사용법 (3줄이면 끝):
-#   시작:  scripts/start.sh          # 이미 실행 중이면 그대로 둠 (재실행 안전)
-#   접속:  tmux attach -t ax         # cmux 패인에서는: tmux attach -t ax:<창이름>
-#   종료:  tmux kill-session -t ax
+#   tmux(ax)  = 무인 상시 서비스만: hermes(게이트웨이) / watcher(감시)
+#               재부팅 시 launchd가 이 스크립트를 자동 실행
+#   cmux      = 인터랙티브 에이전트: 패인에서 claudex / codexx / agyx 직접 실행
+#               cmux 재시작 시 레이아웃+세션 자동 복원 (1회 설정: cmux hooks setup)
 #
-# 창 구성: claude(오케스트레이터) / codex(워커) / anti(워커) / watcher(감시, Phase 5) / hermes(모바일 창구)
-# cmux 사용: cmux에서 패인을 분할(new-split)한 뒤 각 패인에서 위 attach 명령 입력
-# 주의: Hermes 자체 launchd 서비스(ai.hermes.gateway)가 켜져 있으면 게이트웨이가 중복 실행됨
-#       → 확인: launchctl list | grep ai.hermes.gateway
-#       → 해제: launchctl unload ~/Library/LaunchAgents/ai.hermes.gateway.plist
+# 사용법:  시작 scripts/start.sh | 보기 scripts/view.sh hermes | 종료 tmux kill-session -t ax
 
 SESSION="ax"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -21,32 +17,20 @@ if ! command -v tmux >/dev/null; then
 fi
 
 if tmux has-session -t "$SESSION" 2>/dev/null; then
-  echo "[ax] 세션이 이미 실행 중입니다 → tmux attach -t ax"
+  echo "[ax] 서비스 세션이 이미 실행 중입니다"
   exit 0
 fi
 
-tmux new-session -d -s "$SESSION" -n claude  -c "$ROOT"
-tmux new-window  -t "$SESSION"    -n codex   -c "$ROOT"
-tmux new-window  -t "$SESSION"    -n anti    -c "$ROOT"
+tmux new-session -d -s "$SESSION" -n hermes  -c "$ROOT"
 tmux new-window  -t "$SESSION"    -n watcher -c "$ROOT"
-tmux new-window  -t "$SESSION"    -n hermes  -c "$ROOT"
 
-# 각 창: 역할 배너 → 에이전트 CLI가 설치돼 있으면 자동 실행
 boot() {
   tmux send-keys -t "$SESSION:$1" \
     "clear; echo '── [$1] $2 ──'; $3" C-m
 }
-boot claude  "오케스트레이터·메인 작업 (Claude Code)" \
-     "command -v claude >/dev/null && claude || echo 'claude CLI 미설치 → npm install -g @anthropic-ai/claude-code'"
-boot codex   "단순작업 워커 (Codex)" \
-     "command -v codex >/dev/null && codex || echo 'codex CLI 미설치 → npm install -g @openai/codex'"
-boot anti    "단순작업 워커 (Antigravity)" \
-     "command -v antigravity >/dev/null && antigravity || echo 'antigravity CLI 미설치 — 설치 후 이 창에서 직접 실행'"
-boot watcher "감시 자동화 — Phase 5에서 구성" \
-     "echo '대기 중 (Phase 5: GDrive 감시)'"
 boot hermes  "모바일 창구 (Hermes gateway, 크래시 시 5초 후 자동 재시작)" \
-     "command -v hermes >/dev/null && while true; do hermes gateway; echo '[hermes] 종료됨 — 5초 후 재시작 (중단: Ctrl+C 두 번)'; sleep 5; done || echo 'hermes 미설치 — curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash'"
+     "command -v hermes >/dev/null && while true; do hermes gateway; echo '[hermes] 종료됨 — 5초 후 재시작 (중단: Ctrl+C 두 번)'; sleep 5; done || echo 'hermes 미설치'"
+boot watcher "감시 자동화 — 이벤트 스크립트 supervisor" \
+     "'$ROOT/scripts/watcher.sh'"
 
-tmux select-window -t "$SESSION:claude"
-echo "[ax] 세션 시작됨: claude / codex / anti / watcher / hermes"
-echo "     접속: tmux attach -t ax"
+echo "[ax] 상시 서비스 시작됨: hermes / watcher"

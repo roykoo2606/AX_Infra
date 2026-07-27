@@ -26,7 +26,7 @@ cat > "$PLIST" <<EOF
   <key>RunAtLoad</key><true/>
   <key>EnvironmentVariables</key>
   <dict>
-    <key>PATH</key><string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    <key>PATH</key><string>$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
   </dict>
   <key>StandardOutPath</key><string>$ROOT/logs/system/autostart.log</string>
   <key>StandardErrorPath</key><string>$ROOT/logs/system/autostart.err</string>
