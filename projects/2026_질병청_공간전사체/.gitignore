@@ -14,3 +14,7 @@ output/medi-auto/pages/
 # 출처 기록(_출처.md)은 커밋되므로 추적성은 유지된다.
 workspace/_원본사본/*
 !workspace/_원본사본/_출처.md
+
+# 보고서 제작 자산 — v0.5 pptx에서 추출한 이미지·MeDIAuto 캡처 (재생성 가능)
+workspace/01_보고/자산/
+workspace/01_보고/*.pptx
