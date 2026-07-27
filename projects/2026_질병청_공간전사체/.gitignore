@@ -6,3 +6,7 @@
 # 개인정보 포함 — 급여명세서·급여이체증·통장사본·4대보험 완납증명 (RULES.md 참조)
 parsed/archive/03_증빙/
 parsed/archive/02_사업비/선금신청_260129/
+
+# MeDIAuto 조사 캡처 — 운영 시스템 내부 화면(샘플 ID 등 포함). 보고서(REPORT.md)만 커밋한다.
+output/medi-auto/screens/
+output/medi-auto/pages/
