@@ -47,7 +47,7 @@ def build(s):
            T.EYEBROW, color=T.BLUE)
     s.text(L, 160, CONTENT_W, 56, [
         ("계약 기준 3,000건의 ", None, None),
-        ("2배", T.MINT, None),
+        ("2배", c["accent"], None),
         ("를 확보했고, 1차 가공은 97% 완료했습니다", None, None),
     ], T.H2, color=c["text"])
 
@@ -55,20 +55,20 @@ def build(s):
     for i, (label, value, unit, note, watch) in enumerate(KPIS):
         x = L + i * (COL + GAP)
         s.rect(x, 286, COL, 180, fill=c["surface"],
-               line=T.ACCENT if watch else c["border"],
+               line=c["accent"] if watch else c["border"],
                line_w=2 if watch else 1, radius=14)
         s.text(x + 24, 310, COL - 48, 20, label, T.CAPTION,
                color=c["text2"], secondary=True)
         s.text(x + 24, 348, COL - 48, 62, [
             (value, None, None),
-            (unit, T.ACCENT if watch else T.MINT, None),
+            (unit, c["accent"] if watch else c["text3"], None),
         ], T.KPI, color=c["text"])
         if watch:                                   # accent underline on the bottleneck
-            s.line(x + 24, 414, 168, T.ACCENT, thickness=5)
+            s.line(x + 24, 414, 168, c["accent"], thickness=5)
         s.text(x + 24, 424, COL - 48, 34, note, T.CAPTION, color=c["text3"])
 
     # data table — y=490, 4 rows x 64px
-    s.table(L, 490, CONTENT_W, 256, TABLE,
+    s.table(L, 490, CONTENT_W, 256, TABLE, header_color=c["text2"],
             col_widths=[CONTENT_W * 0.28] + [CONTENT_W * 0.18] * 4)
 
     # footer — y=816
@@ -84,5 +84,5 @@ if __name__ == "__main__":
     deck = Deck()
     for theme in ("dark", "light"):
         build(deck.slide(theme))
-    out = deck.save("샘플장표_데이터_네이티브_v1.pptx")
+    out = deck.save("샘플장표_데이터_네이티브_v2_퍼플.pptx")
     print("생성 완료:", out)

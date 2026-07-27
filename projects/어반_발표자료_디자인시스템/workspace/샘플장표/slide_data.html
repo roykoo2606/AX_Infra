@@ -10,7 +10,7 @@
   --brand-teal: #33C3C6;
   --brand-blue: #108CEB;
   --brand-purple: #745CED;
-  --brand-accent: #00FFCB;
+  --brand-accent: #9B8AF2;   /* emphasis purple — dark */
   --brand-deep: #0A082B;
 
   /* MEDICUS colors — IR */
@@ -44,6 +44,7 @@
   --border: rgba(144,192,240,.24);
   --grid-line: rgba(144,192,240,.16);
   --shadow-card: 0 24px 56px -20px rgba(0,0,80,.72);
+  --accent: #9B8AF2;
 }
 [data-theme="light"] {
   color-scheme: light;
@@ -56,6 +57,7 @@
   --border: rgba(10,8,43,.16);
   --grid-line: rgba(10,8,43,.10);
   --shadow-card: 0 24px 56px -20px rgba(0,0,80,.28);
+  --accent: #5F45D6;
 }
 
 * { margin:0; padding:0; box-sizing:border-box }
@@ -99,7 +101,7 @@ body {
 .slide-title { position:absolute; left:78px; right:70px; top:126px; z-index:var(--z-content) }
 .slide-title .t-eyebrow { margin:0 0 12px; color:var(--brand-blue) }
 .slide-title .t-h2 { margin:0; max-width:1180px }
-.slide-title .t-h2 em { font-style:normal; color:var(--brand-mint) }
+.slide-title .t-h2 em { font-style:normal; color:var(--accent) }
 
 /* content — y=286, bottom 118 */
 .slide-content { position:absolute; left:78px; right:70px; top:286px; bottom:118px; z-index:var(--z-content) }
@@ -117,12 +119,12 @@ body {
 }
 .kpi-tile__label { color:var(--text-secondary); font:600 13px/1.45 var(--font-secondary) }
 .kpi-tile__value { color:var(--text-primary); font:900 56px/1 var(--font-primary); letter-spacing:-.03em }
-.kpi-tile__value span { margin-left:4px; color:var(--brand-mint); font-size:28px }
+.kpi-tile__value span { margin-left:4px; color:var(--text-tertiary); font-size:28px }
 .kpi-tile__note { color:var(--text-tertiary); font:500 13px/1.45 var(--font-primary) }
 /* bottleneck tile — accent underline per §3.3 (accent only on key figure) */
-.kpi-tile--watch { border-color:rgba(0,255,203,.34) }
-.kpi-tile--watch .kpi-tile__value { box-shadow:inset 0 -6px 0 -2px var(--brand-accent) ; width:fit-content }
-.kpi-tile--watch .kpi-tile__value span { color:var(--brand-accent) }
+.kpi-tile--watch { border-color:var(--accent) }
+.kpi-tile--watch .kpi-tile__value { box-shadow:inset 0 -6px 0 -2px var(--accent) ; width:fit-content }
+.kpi-tile--watch .kpi-tile__value span { color:var(--accent) }
 
 /* data table — design.md §6.8 */
 .data-table { width:100%; border-collapse:collapse; table-layout:fixed; font-size:18px }
@@ -130,7 +132,7 @@ body {
   height:64px; padding:14px 16px; border-bottom:1px solid var(--grid-line);
   text-align:right; vertical-align:middle;
 }
-.data-table thead th { color:var(--brand-mint); font-weight:700; background:var(--surface-2) }
+.data-table thead th { color:var(--text-secondary); font-weight:700; background:var(--surface-2) }
 .data-table th:first-child, .data-table td:first-child { text-align:left }
 .data-table tbody th { color:var(--text-primary); font-weight:700 }
 .data-table td { color:var(--text-secondary); font-weight:400; font-variant-numeric:tabular-nums }

@@ -95,6 +95,10 @@ THEMES = {
         "text3": "#8A87AC",
         "border": "#2A2A55",
         "grid": "#232149",
+        # emphasis — brand purple, saturation reduced and lightness raised so it
+        # stays calm on a dark canvas without losing contrast (6.8:1)
+        "accent": "#9B8AF2",
+        "accent_soft": "#6E5FB5",
     },
     "light": {
         "canvas": "#FFFFFF",
@@ -105,6 +109,9 @@ THEMES = {
         "text3": "#7B799A",
         "border": "#D8DAE6",
         "grid": "#E6E7EF",
+        # same hue, darkened instead of lightened for a white canvas (6.3:1)
+        "accent": "#5F45D6",
+        "accent_soft": "#8E7CE8",
     },
 }
 
