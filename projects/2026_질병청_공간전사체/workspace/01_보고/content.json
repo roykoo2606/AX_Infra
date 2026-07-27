@@ -386,10 +386,6 @@
     {
      "path": "자산/s08/image14.png",
      "caption": "ViT 기반 CellVit 아키텍처 구축"
-    },
-    {
-     "path": "자산/s08/image15.png",
-     "caption": "투트랙(HoverNet vs CellVit) 성능 비교"
     }
    ],
    "bullets": [
@@ -397,7 +393,41 @@
     "Class Imbalance 극복: Focal Loss 및 Class-weighted CrossEntropy 도입으로 희귀 세포 학습 가중치 부여.",
     "ViT(Vision Transformer) 기반 신규 CellVit 구축 완료 및 기존 HoverNet과의 투트랙(Two-Track) 교차 검증 진행."
    ],
-   "source": ""
+   "source": "",
+   "table": {
+    "head": [
+     "평가 지표",
+     "값",
+     "지표 의미"
+    ],
+    "rows": [
+     [
+      "DICE",
+      "0.6527",
+      "분할 영역 중첩도"
+     ],
+     [
+      "AJI",
+      "0.2677",
+      "개체 단위 일치도"
+     ],
+     [
+      "PQ",
+      "0.1963",
+      "Panoptic Quality (검출×분할)"
+     ],
+     [
+      "SQ",
+      "0.4946",
+      "Segmentation Quality"
+     ],
+     [
+      "DQ",
+      "0.3038",
+      "Detection Quality"
+     ]
+    ]
+   }
   },
   {
    "no": 11,

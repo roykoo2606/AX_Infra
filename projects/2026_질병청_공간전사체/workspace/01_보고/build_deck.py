@@ -12,6 +12,7 @@ assets; captions, frames, tables, labels, and all other content remain native.
 from __future__ import annotations
 
 import json
+import re
 import sys
 from collections.abc import Iterable
 from importlib import import_module
@@ -133,12 +134,25 @@ def add_text(
     anchor=MSO_ANCHOR.TOP,
     secondary: bool = False,
 ):
+    mixed_latin = (
+        isinstance(text, str)
+        and re.search(r"[A-Za-z]", text)
+        and re.search(r"[가-힣]", text)
+    )
+    content = text
+    if mixed_latin:
+        parts = re.split(
+            r"([A-Za-z][A-Za-z0-9&./+%()~-]*(?: [A-Za-z0-9&./+%()~-]+)*)",
+            text,
+        )
+        content = [(part, None, None) for part in parts if part]
+
     box = s.text(
         x,
         y,
         w,
         h,
-        text,
+        content,
         style,
         color=color,
         weight=weight,
@@ -150,11 +164,18 @@ def add_text(
     # need a matching East Asian mapping for PowerPoint and LibreOffice.
     for paragraph in box.text_frame.paragraphs:
         for run in paragraph.runs:
+            is_latin = bool(re.search(r"[A-Za-z]", run.text))
+            if not secondary and is_latin:
+                # Freesentation 7 Bold intermittently drops mixed-script Latin
+                # glyphs in LibreOffice; Medium is stable in both renderers.
+                run.font.name = T.F2[500]
             typeface = run.font.name
             if not typeface:
                 continue
             r_pr = run.font._rPr
-            r_pr.set("lang", "ko-KR")
+            r_pr.set("lang", "en-US" if is_latin else "ko-KR")
+            if is_latin:
+                continue
             for tag in ("a:ea", "a:cs"):
                 node = r_pr.find(qn(tag))
                 if node is None:
@@ -523,23 +544,23 @@ def render_cover(
     s = deck.slide(theme=THEME)
     s.rect(0, 0, 10, 900, fill=s.c["accent"])
     add_text(s, SAFE_X, 70, 650, 24, item.get("eyebrow", ""), T.EYEBROW, color=s.c["accent"])
-    add_text(s, SAFE_X, 176, 660, 244, item["title"], T.H1, color=s.c["text"])
+    add_text(s, SAFE_X, 176, 660, 270, item["title"], T.H1, color=s.c["text"])
     add_text(
         s,
         SAFE_X,
-        452,
+        500,
         650,
         72,
         item.get("subtitle", meta.get("subtitle", "")),
         T.BODY_LG,
         color=s.c["text2"],
     )
-    s.line(SAFE_X, 558, 560, s.c["border"], thickness=1)
-    add_text(s, SAFE_X, 584, 650, 28, item.get("org", meta.get("org", "")), T.BODY, color=s.c["text"])
+    s.line(SAFE_X, 576, 560, s.c["border"], thickness=1)
+    add_text(s, SAFE_X, 600, 650, 28, item.get("org", meta.get("org", "")), T.BODY, color=s.c["text"])
     add_text(
         s,
         SAFE_X,
-        624,
+        636,
         650,
         26,
         item.get("partners", meta.get("partners", "")),
@@ -549,7 +570,7 @@ def render_cover(
     add_text(
         s,
         SAFE_X,
-        666,
+        674,
         300,
         22,
         item.get("date", meta.get("date", "")),

@@ -21,9 +21,11 @@ BANNED_CLAIMS = {
 }
 REQUIRED = {
     "2026-05-27": "사업비 기준일",
-    "32.6": "전문의 리뷰 진척률",
+    "27.3": "전문의 리뷰 진척률 (v0.5 기준)",
     "0.00%": "임상 연계 미착수",
 }
+# 대외 보고본에는 내부 시스템 실측치와 내부 문서 참조를 넣지 않는다
+BANNED_INTERNAL = ("7,919", "7,898", "2,582", "5,353", "v0.5")
 
 
 def all_text(prs):
@@ -66,6 +68,12 @@ def main(path):
     if abs(Emu(prs.slide_width).inches - 13.333) > 0.01:
         fails.append("슬라이드 폭이 13.333in이 아님")
 
+    # 0) 대외 부적합 이미지 — 터미널·콘솔 캡처가 보고서에 섞이지 않도록
+    for i, s in enumerate(prs.slides, 1):
+        for sh in s.shapes:
+            if sh.shape_type == 13 and sh.image.size == (1709, 247):
+                fails.append(f"슬라이드 {i}: 콘솔 캡처 이미지 — 네이티브 표로 대체할 것")
+
     # 1) 네이티브 여부 — 사진은 허용, 슬라이드 전면 래스터는 금지
     print("\n[네이티브 검사]")
     for i, s in enumerate(prs.slides, 1):
@@ -103,6 +111,9 @@ def main(path):
     for k, why in BANNED_CLAIMS.items():
         if k in text:
             fails.append(f"금지 표현 '{k}' — {why}")
+    for k in BANNED_INTERNAL:
+        if k in text:
+            fails.append(f"내부 전용 값·참조 '{k}' 노출 — 대외 보고본에서 제거할 것")
     for k, why in REQUIRED.items():
         if k not in text:
             warns.append(f"필수 값 '{k}' 미발견 — {why}")
