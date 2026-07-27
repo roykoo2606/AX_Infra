@@ -1,0 +1,6 @@
+# 원본 바이너리 — 출처가 별도로 존재하므로 커밋하지 않는다 (112MB)
+/source/
+
+# 대용량 렌더 이미지 — 재생성 가능
+workspace/_근거/irbook/
+workspace/_근거/*.png
