@@ -37,7 +37,7 @@ pt = _udl_pptx.pt
 px = _udl_pptx.px
 
 
-THEME = "dark"
+THEME = "light"
 SAFE_X = 78
 SAFE_RIGHT = 70
 SAFE_W = 1600 - SAFE_X - SAFE_RIGHT
@@ -164,19 +164,8 @@ def add_text(
     return box
 
 
-def add_footer(s: Slide, slide_no: int, source: str = "") -> None:
+def add_footer(s: Slide, slide_no: int) -> None:
     s.line(SAFE_X, FOOTER_Y, SAFE_W, s.c["border"], thickness=1)
-    add_text(
-        s,
-        SAFE_X,
-        FOOTER_Y + 12,
-        1240,
-        24,
-        source,
-        T.META,
-        color=s.c["text3"],
-        secondary=True,
-    )
     add_text(
         s,
         1470,
@@ -293,21 +282,44 @@ def _set_picture_rounding(picture, radius_px: float, width_px: float, height_px:
     )
 
 
-def _apply_cover_crop(picture, image_path: Path, frame_w: float, frame_h: float) -> None:
+def _contain_size(image_path: Path, frame_w: float, frame_h: float) -> tuple[float, float]:
+    """Return dimensions that fit the complete image inside the frame."""
     with Image.open(image_path) as image:
         source_w, source_h = image.size
     source_ratio = source_w / source_h
     frame_ratio = frame_w / frame_h
     if source_ratio > frame_ratio:
-        keep = frame_ratio / source_ratio
-        crop = (1 - keep) / 2
-        picture.crop_left = crop
-        picture.crop_right = crop
-    elif source_ratio < frame_ratio:
-        keep = source_ratio / frame_ratio
-        crop = (1 - keep) / 2
-        picture.crop_top = crop
-        picture.crop_bottom = crop
+        return frame_w, frame_w / source_ratio
+    return frame_h * source_ratio, frame_h
+
+
+def add_picture_contain(
+    s: Slide,
+    x: float,
+    y: float,
+    w: float,
+    h: float,
+    path: Path,
+    *,
+    description: str = "",
+    radius: float | None = None,
+) -> Any:
+    """Add one uncropped PICTURE, centered in its frame at the original ratio."""
+    picture_w, picture_h = _contain_size(path, w, h)
+    picture_x = x + (w - picture_w) / 2
+    picture_y = y + (h - picture_h) / 2
+    picture = s._s.shapes.add_picture(
+        str(path),
+        px(picture_x),
+        px(picture_y),
+        px(picture_w),
+        px(picture_h),
+    )
+    if radius is not None:
+        _set_picture_rounding(picture, radius, picture_w, picture_h)
+    picture.name = f"PHOTO · {path.name}"
+    picture._pic.nvPicPr.cNvPr.set("descr", description or path.name)
+    return picture
 
 
 def image_card(
@@ -319,16 +331,20 @@ def image_card(
     path: Path,
     caption: str,
 ) -> Any:
-    """Add one cover-cropped PICTURE plus native rounded frame and caption."""
+    """Add one uncropped, contained PICTURE plus native frame and caption."""
     caption_h = 48
     s.rect(x, y, w, h, fill=s.c["surface"], line=s.c["border"], radius=14)
-    picture = s._s.shapes.add_picture(str(path), px(x), px(y), px(w), px(h))
-    _apply_cover_crop(picture, path, w, h)
-    _set_picture_rounding(picture, 14, w, h)
-    picture.name = f"PHOTO · {path.name}"
-    picture._pic.nvPicPr.cNvPr.set("descr", caption or path.name)
+    picture = add_picture_contain(
+        s,
+        x,
+        y,
+        w,
+        h - caption_h,
+        path,
+        description=caption,
+        radius=14,
+    )
 
-    # The overlay and caption are native; the raster count remains one.
     s.rect(x, y + h - caption_h, w, caption_h, fill=s.c["canvas"])
     s.rect(x, y + h - caption_h, 5, caption_h, fill=s.c["accent"])
     add_text(
@@ -498,31 +514,33 @@ def add_insight_cards(
         )
 
 
-def render_cover(deck: Deck, item: dict[str, Any], meta: dict[str, Any]) -> None:
+def render_cover(
+    deck: Deck,
+    item: dict[str, Any],
+    meta: dict[str, Any],
+    content_dir: Path,
+) -> None:
     s = deck.slide(theme=THEME)
     s.rect(0, 0, 10, 900, fill=s.c["accent"])
-    s.rect(1010, 0, 590, 900, fill=s.c["surface"])
-    s.rect(1080, 160, 430, 430, fill=s.c["surface2"], line=s.c["border"], radius=14)
-    s.rect(1140, 220, 310, 310, fill=s.c["canvas"], line=s.c["accent_soft"], line_w=2, radius=14)
-    add_text(s, SAFE_X, 70, 700, 24, item.get("eyebrow", ""), T.EYEBROW, color=s.c["accent"])
-    add_text(s, SAFE_X, 198, 860, 250, item["title"], T.H1, color=s.c["text"])
+    add_text(s, SAFE_X, 70, 650, 24, item.get("eyebrow", ""), T.EYEBROW, color=s.c["accent"])
+    add_text(s, SAFE_X, 176, 660, 244, item["title"], T.H1, color=s.c["text"])
     add_text(
         s,
         SAFE_X,
-        478,
-        760,
-        46,
+        452,
+        650,
+        72,
         item.get("subtitle", meta.get("subtitle", "")),
         T.BODY_LG,
         color=s.c["text2"],
     )
-    s.line(SAFE_X, 596, 620, s.c["border"], thickness=1)
-    add_text(s, SAFE_X, 624, 760, 28, item.get("org", meta.get("org", "")), T.BODY, color=s.c["text"])
+    s.line(SAFE_X, 558, 560, s.c["border"], thickness=1)
+    add_text(s, SAFE_X, 584, 650, 28, item.get("org", meta.get("org", "")), T.BODY, color=s.c["text"])
     add_text(
         s,
         SAFE_X,
-        665,
-        760,
+        624,
+        650,
         26,
         item.get("partners", meta.get("partners", "")),
         T.CAPTION,
@@ -531,7 +549,7 @@ def render_cover(deck: Deck, item: dict[str, Any], meta: dict[str, Any]) -> None
     add_text(
         s,
         SAFE_X,
-        730,
+        666,
         300,
         22,
         item.get("date", meta.get("date", "")),
@@ -539,19 +557,50 @@ def render_cover(deck: Deck, item: dict[str, Any], meta: dict[str, Any]) -> None
         color=s.c["text3"],
         secondary=True,
     )
-    add_text(s, 1140, 332, 310, 44, "UDL", T.H2, color=s.c["accent"], align=PP_ALIGN.CENTER)
-    add_text(
-        s,
-        1140,
-        390,
-        310,
-        28,
-        "SPATIAL BIOMARKER",
-        T.META,
-        color=s.c["text2"],
-        align=PP_ALIGN.CENTER,
-        secondary=True,
+
+    hero_path = resolve_asset(content_dir, "자산/cover/spatial_xenium.jpg")
+    hero_x, hero_y, hero_w, hero_h = 790, 122, 740, 520
+    s.rect(
+        hero_x,
+        hero_y,
+        hero_w,
+        hero_h,
+        fill=s.c["surface"],
+        line=s.c["border"],
+        radius=14,
     )
+    add_picture_contain(
+        s,
+        hero_x + 16,
+        hero_y + 16,
+        hero_w - 32,
+        hero_h - 32,
+        hero_path,
+        description="Xenium 공간전사체 분석 이미지",
+        radius=14,
+    )
+
+    logo_specs = [
+        ("자산/ci_final/urbandatalab.png", 54),
+        ("자산/ci_final/gil.png", 38),
+        ("자산/ci_final/portrai.png", 42),
+        ("자산/ci_final/nih.png", 38),
+    ]
+    logo_y = 732
+    logo_w = 280
+    logo_gap = 70
+    for idx, (relative_path, visual_h) in enumerate(logo_specs):
+        logo_x = SAFE_X + idx * (logo_w + logo_gap)
+        logo_path = resolve_asset(content_dir, relative_path)
+        add_picture_contain(
+            s,
+            logo_x,
+            logo_y + (58 - visual_h) / 2,
+            logo_w,
+            visual_h,
+            logo_path,
+            description=logo_path.stem,
+        )
     add_footer(s, item["no"])
 
 
@@ -578,7 +627,7 @@ def render_agenda(deck: Deck, item: dict[str, Any]) -> None:
         )
         clean = label.split(". ", 1)[-1]
         add_text(s, left + 88, top + 21, grid_span(6) - 108, 46, clean, T.BODY, color=s.c["text"])
-    add_footer(s, item["no"], item.get("source", ""))
+    add_footer(s, item["no"])
 
 
 def render_kpi_table(deck: Deck, item: dict[str, Any]) -> None:
@@ -588,7 +637,7 @@ def render_kpi_table(deck: Deck, item: dict[str, Any]) -> None:
     add_kpi_tiles(s, item.get("kpis", []), SAFE_X, 244, SAFE_W, 128)
     add_table_from_spec(s, item.get("table", {}), SAFE_X, 396, SAFE_W, 272)
     add_insight_cards(s, item.get("bullets", [])[:3], SAFE_X, 692, SAFE_W, 100)
-    add_footer(s, item["no"], item.get("source", ""))
+    add_footer(s, item["no"])
 
 
 def timeline(
@@ -651,7 +700,7 @@ def render_timeline(deck: Deck, item: dict[str, Any]) -> None:
     s = deck.slide(theme=THEME)
     add_header(s, item)
     timeline(s, item.get("events", []), SAFE_X, 260, SAFE_W, 520)
-    add_footer(s, item["no"], item.get("source", ""))
+    add_footer(s, item["no"])
 
 
 def image_items(item: dict[str, Any]) -> list[dict[str, str]]:
@@ -714,7 +763,7 @@ def render_image_text(deck: Deck, item: dict[str, Any], content_dir: Path) -> No
         390,
         compact=True,
     )
-    add_footer(s, item["no"], item.get("source", ""))
+    add_footer(s, item["no"])
 
 
 def render_image_grid(deck: Deck, item: dict[str, Any], content_dir: Path) -> None:
@@ -735,12 +784,9 @@ def render_image_grid(deck: Deck, item: dict[str, Any], content_dir: Path) -> No
         )
     if item.get("table"):
         add_table_from_spec(s, item["table"], SAFE_X, 540, SAFE_W, 246)
-        if item.get("table_note"):
-            add_text(s, SAFE_X, 792, SAFE_W, 20, item["table_note"],
-                     T.CAPTION, color=s.c["text3"])
     else:
         add_insight_cards(s, item.get("bullets", [])[:3], SAFE_X, 548, SAFE_W, 230)
-    add_footer(s, item["no"], item.get("source", ""))
+    add_footer(s, item["no"])
 
 
 def render_table(deck: Deck, item: dict[str, Any]) -> None:
@@ -755,7 +801,7 @@ def render_table(deck: Deck, item: dict[str, Any]) -> None:
         table_h = 380
     add_table_from_spec(s, item.get("table", {}), SAFE_X, table_y, SAFE_W, table_h)
     add_insight_cards(s, item.get("bullets", [])[:3], SAFE_X, 704, SAFE_W, 88)
-    add_footer(s, item["no"], item.get("source", ""))
+    add_footer(s, item["no"])
 
 
 def render_list(deck: Deck, item: dict[str, Any]) -> None:
@@ -794,7 +840,7 @@ def render_list(deck: Deck, item: dict[str, Any]) -> None:
             T.BODY,
             color=s.c["text2"],
         )
-    add_footer(s, item["no"], item.get("source", ""))
+    add_footer(s, item["no"])
 
 
 def render_closing(deck: Deck, item: dict[str, Any]) -> None:
@@ -837,7 +883,7 @@ def build_deck(data: dict[str, Any], content_path: Path, output_path: Path) -> P
     meta = data["meta"]
     content_dir = content_path.parent
     renderers = {
-        "cover": lambda item: render_cover(deck, item, meta),
+        "cover": lambda item: render_cover(deck, item, meta, content_dir),
         "agenda": lambda item: render_agenda(deck, item),
         "kpi_table": lambda item: render_kpi_table(deck, item),
         "timeline": lambda item: render_timeline(deck, item),
@@ -858,7 +904,7 @@ def build_deck(data: dict[str, Any], content_path: Path, output_path: Path) -> P
 def main(argv: list[str]) -> int:
     if len(argv) != 3:
         print(
-            "사용법: python3 build_deck.py content.json 중간보고_초안_v1.pptx",
+            "사용법: python3 build_deck.py content.json 중간보고_초안_v2.pptx",
             file=sys.stderr,
         )
         return 2
@@ -877,6 +923,7 @@ def main(argv: list[str]) -> int:
         if shape.shape_type == MSO_SHAPE_TYPE.PICTURE
     )
     expected_pictures = sum(len(image_items(item)) for item in data["slides"])
+    expected_pictures += 5 * sum(item["type"] == "cover" for item in data["slides"])
     if picture_count != expected_pictures:
         raise RuntimeError(
             f"PICTURE 개수 불일치: 실제 {picture_count}, 콘텐츠 사진 {expected_pictures}"

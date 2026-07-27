@@ -95,6 +95,7 @@ THEMES = {
         "text3": "#8A87AC",
         "border": "#2A2A55",
         "grid": "#232149",
+        "brand_blue": "#108CEB",
         # emphasis — brand purple, saturation reduced and lightness raised so it
         # stays calm on a dark canvas without losing contrast (6.8:1)
         "accent": "#9B8AF2",
@@ -107,8 +108,10 @@ THEMES = {
         "text": "#0A082B",
         "text2": "#4A4869",
         "text3": "#7B799A",
-        "border": "#D8DAE6",
+        "border": "#C4C8DA",     # 1.66:1 on white — visible card outline
         "grid": "#E6E7EF",
+        # brand blue darkened to clear 4.5:1 for small text on white (hue kept at 206°)
+        "brand_blue": "#0C6DB6",
         # same hue, darkened instead of lightened for a white canvas (6.3:1)
         "accent": "#5F45D6",
         "accent_soft": "#8E7CE8",
