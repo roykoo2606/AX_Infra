@@ -24,8 +24,8 @@ cmux (관제·작업 화면)                          ← 인터랙티브 에이
 | 맥 재부팅 | **없음.** launchd가 tmux 서비스(hermes/watcher)를 자동 기동. cmux는 열면 위와 동일 |
 | 제로 베이스(새 워크스페이스/새 맥) | cmux 빈 패인에서 `axx` — 분할부터 에이전트 실행까지 자동 |
 | 모바일에서 지시 | Discord로 Hermes에게. 결과는 inbox/·TASKS.md·logs/에 기록됨 |
-| 서비스 로그 보기 | `scripts/view.sh hermes` 또는 `scripts/view.sh watcher` (나올 땐 Ctrl+b d). watcher 하위 서비스 로그는 `logs/system/watcher.log`, `logs/system/rpb-daily.log` |
-| 연구기획 데일리 스캔 수동 실행 | `scripts/rpb-daily.sh --once` — claudex가 Drive를 못 읽어도 watcher supervisor가 같은 호스트 권한으로 스캔·브리프 생성 |
+| 서비스 로그 보기 | `scripts/view.sh hermes` 또는 `scripts/view.sh watcher` (나올 땐 Ctrl+b d). watcher 로그는 `logs/system/watcher.log`, rpb-daily 로그는 `~/Urban_AX/logs/system/rpb-daily.log` |
+| 연구기획 데일리 스캔 수동 실행 | `~/Urban_AX/scripts/rpb-daily.sh --once` — claudex가 Drive를 못 읽어도 watcher supervisor가 같은 호스트 권한으로 스캔·브리프 생성 |
 | watcher에 새 이벤트 추가 | `scripts/watcher.sh`의 `SERVICES`에 `name|command|restart_delay` 한 줄 추가. 각 서비스는 자체 log/lock을 가져야 함 |
 
 ## 로그인
@@ -69,9 +69,9 @@ scripts/install-autostart.sh                         # 재부팅 자동 기동
 | 명령 | 프로젝트 | 구성 |
 |---|---|---|
 | `axx` | 범용 AX_Infra (인프라 자체) | claudex · agyx · codexx |
-| `uraxx` | **Urban_AX 마스터** (`projects/Urban_AX/`) — 어반데이터랩 전사 AX | claudex(조율) · agyx(수집·파싱) · codexx(구현) |
+| `uraxx` | **Urban_AX 독립 루트** (`~/Urban_AX/`) — 어반데이터랩 전사 AX 마스터 | claudex(조율) · agyx(수집·파싱) · codexx(구현) |
 | `uraxx weekly` / `uraxx rpb` / `uraxx mig` | Urban_AX 서브(주간보고 대시보드 / RPB / vault 이관)로 경로만 변경 | 동일 3분할 |
-| `beaxx` | B:Essential AX_Infra | 별도 레이아웃 |
+| `beaxx` | B:Essential AX_Infra (`~/BEssential/BE_AX_Infra`) | 별도 레이아웃 |
 
 빈 패인에서 명령만 치면 해당 프로젝트 경로로 3분할 관제 화면이 구성된다.
-Urban_AX 포트폴리오·병렬 운영 계획은 `projects/Urban_AX/ROADMAP.md` 참조.
+Urban_AX 포트폴리오·병렬 운영 계획은 `~/Urban_AX/ROADMAP.md` 참조.

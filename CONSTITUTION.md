@@ -1,4 +1,4 @@
-# CONSTITUTION — AX_Infra 전체 규약 (v0.4)
+# CONSTITUTION — AX_Infra 전체 규약 (v0.5)
 
 > 모든 에이전트(Claude Code, Codex, Antigravity, 향후 로컬 LLM)에 적용되는 최상위 규약.
 > 프로젝트별 지침(projects/*/RULES.md)은 이 규약을 위반할 수 없다.
@@ -32,7 +32,8 @@
 
 ## 1. 데이터 원칙
 
-- 이 저장소(AX_Infra)가 **유일한 데이터 소스**다. 모든 산출물·기록·결정은 여기에 남긴다
+- 이 저장소(AX_Infra)는 **범용 인프라(규약·에이전트 운영·상시 서비스)의 데이터 소스**다. 인프라 산출물·기록·결정은 여기에 남긴다
+- 회사별 AX 작업은 독립 루트에서 한다 (2026-07-28 분리): `~/Urban_AX`(uraxx, 어반데이터랩) · `~/BEssential/BE_AX_Infra`(beaxx). 각 루트가 자체 규약·TASKS·logs를 가진다
 - 저장 위치 규칙:
   - 규약·기획: 루트 (`CONSTITUTION.md`, `WORKFLOW.md`, `00_*.md`)
   - 프로젝트 작업물: `projects/<프로젝트>/` 내부 (산출물은 `projects/<프로젝트>/output/`)
@@ -101,10 +102,7 @@
 - **검증 기계화**: 규칙은 선언이 아니라 도구로 강제한다. vault/ 작업은 린터 ERROR 0이 완료 조건
 - **Handoff**: 에이전트 간 작업 인계는 WORKFLOW §7 양식을 따른다
 
-## 10. 지식 볼트 (vault/)
+## 10. 지식 볼트 (vault/) — Urban_AX로 이전 (2026-07-28)
 
-- `vault/`는 PARA 구조(00. Inbox ~ 04. Archive)의 지식 저장소. 운영 인프라(규약·TASKS·logs·scripts)와 분리한다
-- vault/ 안의 문서는 **Frontmatter v3 표준**(`01_contract/frontmatter_standard_v3.md`) 필수. 운영 파일에는 적용하지 않는다
-- 온톨로지 스키마: `01_contract/ontology_schema.md` | 검증: `python3 scripts/vault/vault_linter.py`
-- 반입 금지 목록(`04_manifest/exclusion_list.md`)은 절대 규칙
-- `01_contract/`~`04_manifest/`는 전달 킷 원본 — 수정하지 않는다 (이관 완료 후 아카이브)
+- vault/·전달킷(01_contract~04_manifest)·vault 툴체인은 `~/Urban_AX/`로 이전했다 (어반데이터랩 지식 자산이므로)
+- vault 규칙은 Urban_AX의 `CONSTITUTION.md` §4를 따른다

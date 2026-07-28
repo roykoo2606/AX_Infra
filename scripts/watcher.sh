@@ -21,8 +21,9 @@ LOG_FILE="$LOG_DIR/watcher.log"
 mkdir -p "$LOG_DIR"
 
 # name|command|restart_delay_seconds
+# rpb-daily moved to the Urban_AX root (2026-07-28); its logs live there too.
 SERVICES=(
-  "rpb-daily|RPB_RUN_ON_START=${RPB_RUN_ON_START:-0} '$REPO/scripts/rpb-daily.sh'|10"
+  "rpb-daily|RPB_RUN_ON_START=${RPB_RUN_ON_START:-0} '/Users/roysmac/Urban_AX/scripts/rpb-daily.sh'|10"
 )
 
 log() {
