@@ -9,6 +9,7 @@ API 토큰 없이, 이미 로그인된 브라우저 안에서 fetch를 실행해
 """
 import base64
 import json
+import os
 import subprocess
 import sys
 import time
@@ -170,6 +171,11 @@ for(let i=0;i<u.length;i+=C){s+=String.fromCharCode.apply(null,u.subarray(i,i+C)
 return btoa(s);})()"""
 
 
+# 브라우저 eval 채널로 base64 전송하므로 대용량 첨부는 극단적으로 느리다.
+# 상한을 넘는 파일은 목록에만 남기고 건너뛴 뒤, 필요할 때 개별로 받는다.
+MAX_ATTACHMENT_BYTES = int(os.environ.get("CONF_MAX_ATT_MB", "8")) * 1024 * 1024
+
+
 def main():
     if len(sys.argv) < 4:
         sys.exit(__doc__)
@@ -205,6 +211,14 @@ def main():
         for at in p.get("attachments", []):
             dl = at.get("dl")
             if not dl:
+                continue
+            size = at.get("size") or 0
+            if size > MAX_ATTACHMENT_BYTES:
+                node["attachments"].append(
+                    {"title": at["title"], "bytes": size, "skipped": "too_large",
+                     "download": dl})
+                stats.setdefault("skipped_large", []).append(
+                    {"page": pid, "title": at["title"], "bytes": size})
                 continue
             url = "/wiki" + dl if dl.startswith("/") else dl
             try:

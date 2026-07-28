@@ -1,4 +1,8 @@
-# 수집 원본·첨부 — Confluence 가 단일 출처. 재수집 가능하고 용량이 크다.
+# 수집 원본·첨부 — Confluence 가 단일 출처. 재수집 가능하고 1.2GB 규모다.
 raw/
 raw2/
-parsed/
+raw3/
+raw4/
+통합/pages/
+통합/attachments/
+통합/parsed/
