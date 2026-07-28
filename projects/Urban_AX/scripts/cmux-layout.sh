@@ -1,20 +1,33 @@
 #!/bin/bash
-# uraxx — 어반데이터랩 주간회의 대시보드 전용 관제 화면
+# uraxx — Urban_AX 마스터 관제 화면 (어반데이터랩 전사 AX)
 #
 #   ┌─────────────┬─────────────┐
-#   │  claudex    │   agyx      │   왼쪽: 설계·조립 (메인)
-#   │  (메인)      ├─────────────┤   우상: 수집·파싱 상시 담당
-#   │             │   codexx    │   우하: 대시보드 구현
+#   │  claudex    │   agyx      │   왼쪽: 오케스트레이터·설계 (메인)
+#   │  (메인)      ├─────────────┤   우상: 수집·파싱·감시 워커
+#   │             │   codexx    │   우하: 구현·반복작업 워커
 #   └─────────────┴─────────────┘
 #
-# 사용법: cmux의 빈 패인에서 `uraxx`
+# 사용법 (cmux 빈 패인에서):
+#   uraxx           마스터(projects/Urban_AX) 기준 관제
+#   uraxx weekly    서브: urban-weekly-dashboard
+#   uraxx rpb       서브: rpb-ax
+#   uraxx mig       서브: urban-ax-migration
 # 패인 ID는 추측하지 않고 분할 전후 목록 비교로 확정한다.
 set -uo pipefail
 export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/usr/local/bin:${PATH:-}"
 
 [ -n "${CMUX_SURFACE_ID:-}" ] || { echo "cmux 터미널 안에서 실행하세요."; exit 1; }
 
-PROJ="$(cd "$(dirname "$0")/.." && pwd)"
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+case "${1:-}" in
+  "")      PROJ="$ROOT";                          LABEL="Urban_AX 마스터" ;;
+  weekly)  PROJ="$ROOT/urban-weekly-dashboard";   LABEL="주간보고 대시보드" ;;
+  rpb)     PROJ="$ROOT/rpb-ax";                   LABEL="RPB 파이프라인" ;;
+  mig)     PROJ="$ROOT/urban-ax-migration";       LABEL="vault 이관" ;;
+  *) echo "사용법: uraxx [weekly|rpb|mig]"; exit 1 ;;
+esac
+[ -d "$PROJ" ] || { echo "폴더 없음: $PROJ"; exit 1; }
+
 ME="$CMUX_SURFACE_ID"
 
 list_ids() {
@@ -40,13 +53,13 @@ send() {  # send <surface> <명령>
 }
 
 # ③ 왼쪽(현재) — claudex 메인
-send "$ME"         "clear; cd '$PROJ'; echo '주간회의 대시보드 / claudex — 설계·조립'; claudex"
+send "$ME"         "clear; cd '$PROJ'; echo '$LABEL / claudex — 설계·조율'; claudex"
 sleep 0.4
 # ④ 우상 — agyx 수집·파싱
-send "$RIGHT"      "clear; cd '$PROJ'; echo '주간회의 대시보드 / agyx — 수집·파싱'; agyx"
+send "$RIGHT"      "clear; cd '$PROJ'; echo '$LABEL / agyx — 수집·파싱·감시'; agyx"
 sleep 0.4
 # ⑤ 우하 — codexx 구현
-send "$RIGHT_DOWN" "clear; cd '$PROJ'; echo '주간회의 대시보드 / codexx — 대시보드 구현'; codexx"
+send "$RIGHT_DOWN" "clear; cd '$PROJ'; echo '$LABEL / codexx — 구현·반복'; codexx"
 
-echo "uraxx 레이아웃 구성 완료 — $PROJ"
+echo "uraxx 레이아웃 구성 완료 — $LABEL ($PROJ)"
 echo "  왼쪽 claudex($ME) · 우상 agyx($RIGHT) · 우하 codexx($RIGHT_DOWN)"

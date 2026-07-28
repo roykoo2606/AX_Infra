@@ -68,8 +68,10 @@ scripts/install-autostart.sh                         # 재부팅 자동 기동
 
 | 명령 | 프로젝트 | 구성 |
 |---|---|---|
-| `axx` | AX_Infra (기본) | claudex · agyx · codexx |
-| `uraxx` | 어반데이터랩 주간회의 대시보드 | claudex(설계) · agyx(수집·파싱) · codexx(구현) |
+| `axx` | 범용 AX_Infra (인프라 자체) | claudex · agyx · codexx |
+| `uraxx` | **Urban_AX 마스터** (`projects/Urban_AX/`) — 어반데이터랩 전사 AX | claudex(조율) · agyx(수집·파싱) · codexx(구현) |
+| `uraxx weekly` / `uraxx rpb` / `uraxx mig` | Urban_AX 서브(주간보고 대시보드 / RPB / vault 이관)로 경로만 변경 | 동일 3분할 |
 | `beaxx` | B:Essential AX_Infra | 별도 레이아웃 |
 
 빈 패인에서 명령만 치면 해당 프로젝트 경로로 3분할 관제 화면이 구성된다.
+Urban_AX 포트폴리오·병렬 운영 계획은 `projects/Urban_AX/ROADMAP.md` 참조.
