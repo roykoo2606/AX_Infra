@@ -39,7 +39,7 @@
    "no": 3,
    "type": "kpi_table",
    "eyebrow": "ACHIEVEMENT",
-   "title": "이미지·공간전사체·논문 목표는 달성하였으며 검증·연계·기탁 과업에 하반기 역량을 집중함",
+   "title": "이미지·공간전사체·논문 목표를 초과 달성하였으며 검증·연계·기탁에 하반기 역량을 집중함",
    "kpis": [
     {
      "label": "디지털 병리 수집",
@@ -50,9 +50,9 @@
     },
     {
      "label": "공간전사체 생산",
-     "value": "34",
+     "value": "68",
      "unit": "건 완료",
-     "note": "계약 25건 대비 136%",
+     "note": "계약 50건 대비 136%",
      "watch": false
     },
     {
@@ -98,9 +98,9 @@
      ],
      [
       "공간전사체 데이터",
-      "25건 이상",
-      "누적 34건 완료",
-      "목표 달성 (잔여 30건 실험 중)"
+      "50건 이상",
+      "누적 68건 완료",
+      "초과 달성 (136%)"
      ],
      [
       "임상·역학 정보 연계",
@@ -345,106 +345,212 @@
   },
   {
    "no": 8,
-   "type": "image_text",
+   "type": "table",
    "eyebrow": "SPATIAL TRANSCRIPTOMICS",
-   "title": "Xenium 5K Prime Panel 기반 공간전사체 누적 34건 완제 생산 및 잔여 30건 실험 진행 중",
-   "image": "자산/s05/image7.jpg",
-   "image_caption": "Xenium 5K Prime Panel 난소암 조직 공간전사체 발현 데이터 분석 결과",
+   "title": "Xenium 5K Prime Panel로 2차년도 42건을 생산하여 누적 68건, 계약 50건을 상회함",
    "bullets": [
-    "1차년도(2025년) 공간전사체 26건(전립선 16건, 위 10건) 제출 완료에 이어 2차년도 난소암 8건 생산을 완수(누적 34건)함.",
-    "5월 24일 길병원 난소암 블록 2개 대상 Xenium 5K Prime Panel 데이터 성공적 생산에 성공함.",
-    "현재 난소암 30개 조직 샘플 전달받아 실험 진행 중이며, 8월 중 질병청에 Raw/Processed Data 완제 제출 계획임."
+    "2026년 4~6차 실험을 통해 6 rxn의 Xenium 5K panel 실험을 난소암 대상으로 수행하여 42건을 생산함.",
+    "1차년도 26건과 합산하여 누적 68건을 확보, 계약 KPI 50건을 상회함.",
+    "2025년 생산분은 Raw·Processed Data를 질병관리청에 제출 완료함."
    ],
-   "source": ""
+   "source": "",
+   "table": {
+    "head": [
+     "구분",
+     "실험",
+     "패널",
+     "샘플 수"
+    ],
+    "rows": [
+     [
+      "1차년도 (2025)",
+      "전립선 16건 · 위 10건",
+      "Xenium 5K Prime",
+      "26건"
+     ],
+     [
+      "2차년도 4차 실험",
+      "난소암",
+      "Xenium 5K panel 2rxn",
+      "4건"
+     ],
+     [
+      "2차년도 5차 실험",
+      "난소암",
+      "Xenium 5K panel 2rxn",
+      "8건"
+     ],
+     [
+      "2차년도 6차 실험",
+      "난소암",
+      "Xenium 5K panel 2rxn",
+      "30건"
+     ],
+     [
+      "누적",
+      "3개 암종",
+      "6 rxn 진행",
+      "68건 (계약 50건 대비 136%)"
+     ]
+    ]
+   }
   },
   {
    "no": 9,
-   "type": "image_text",
-   "eyebrow": "CLINICAL DATA",
-   "title": "KBN CDM V3.1 기반 세목 조율을 완료하고 하반기 임상데이터 1:1 매칭 추진",
+   "type": "image_pair_note",
+   "eyebrow": "SPATIAL TRANSCRIPTOMICS",
+   "title": "난소암 5·6차 실험에서 Xenium 5K panel 2rxn으로 38건을 추가 생산함",
    "images": [
     {
-     "path": "자산/s06/image8.png",
-     "caption": "KBN CDM V3.1 테이블 정의서 발췌"
+     "path": "자산/v3/st_5차_a.png",
+     "caption": "5차 실험 · 난소암 8 Samples"
     },
     {
-     "path": "자산/s06/image9.png",
-     "caption": "임상·역학 정보 항목 매핑 구조"
-    },
-    {
-     "path": "자산/s06/image10.png",
-     "caption": "병리 이미지 - 임상 데이터 연계 체계"
+     "path": "자산/v3/st_6차_a.png",
+     "caption": "6차 실험 · 난소암 30 Samples"
     }
    ],
+   "note_title": "실험 진행 결과",
    "bullets": [
-    "국립보건연구원 KBN CDM V3.1 표준에 맞춰 위암, 전립선암, 난소암 임상 변수 세목 조율 완료함.",
-    "질병청 발주부서와 사전 논의(5/21)를 거쳐 용어 정비 및 메타데이터 연결 구조를 수립함.",
-    "현재 등록된 892건 대상 임상·역학 데이터 연계율(0.00%)을 8월부터 본격 매칭하여 연계 완료할 계획임."
+    "5차 실험 — Xenium 5K panel 2rxn, 8 Samples",
+    "6차 실험 — Xenium 5K panel 2rxn, 30 Samples",
+    "4~6차 합산 42건 생산으로 2차년도 목표를 조기 충족함"
    ],
    "source": ""
   },
   {
    "no": 10,
-   "type": "image_grid",
-   "eyebrow": "AI DEVELOPMENT",
-   "title": "Class Imbalance 극복을 위한 Loss 개선 및 CellVit 투트랙 교차 검증 추진",
+   "type": "image_trio",
+   "eyebrow": "SPATIAL TRANSCRIPTOMICS",
+   "title": "Sample 분리와 H&E registration으로 공간전사체–병리 이미지 정합 기반을 마련함",
    "images": [
     {
-     "path": "자산/s08/image12.png",
-     "caption": "HoverNet 인스턴스 세그멘테이션 결과"
+     "path": "자산/v3/st_분리_a.png",
+     "caption": "Sample 분리 작업"
     },
     {
-     "path": "자산/s08/image13.png",
-     "caption": "HV Loss 가중치 및 Focal Loss 도입"
+     "path": "자산/v3/st_분리_b.png",
+     "caption": "Sample 분리 결과"
     },
     {
-     "path": "자산/s08/image14.png",
-     "caption": "ViT 기반 CellVit 아키텍처 구축"
+     "path": "자산/v3/st_he_registration.png",
+     "caption": "H&E registration (Xenium–H&E)"
     }
    ],
    "bullets": [
-    "HoverNet 세포 분할 성능 저하 해결: HV Loss 가중치 강화 및 개별 세포핵 분할 정밀도 향상.",
-    "Class Imbalance 극복: Focal Loss 및 Class-weighted CrossEntropy 도입으로 희귀 세포 학습 가중치 부여.",
-    "ViT(Vision Transformer) 기반 신규 CellVit 구축 완료 및 기존 HoverNet과의 투트랙(Two-Track) 교차 검증 진행."
+    "생산된 공간전사체 데이터를 샘플 단위로 분리하여 개별 분석이 가능하도록 정비함.",
+    "Xenium 데이터와 H&E 병리 이미지를 registration하여 좌표 정합 기반을 확보함.",
+    "이 정합 결과가 병리–공간전사체 연계 모델 검증의 입력이 됨."
+   ],
+   "source": ""
+  },
+  {
+   "no": 11,
+   "type": "list",
+   "eyebrow": "SPATIAL TRANSCRIPTOMICS",
+   "title": "single cell reference 확보 후 cell labeling을 완료하여 기관 전달과 기탁을 진행함",
+   "bullets": [
+    "1. single cell reference 확보: 1차년도 후반 생산한 stomach cancer data와 2차년도 난소암 data에 적용할 적절한 reference를 확보함.",
+    "2. Cell labeling 수행: 확보한 reference를 기준으로 cell labeling 작업을 수행함.",
+    "3. 기관 전달: labeling 완료 데이터를 주관기관과 제3세부(가천대학교 길병원)에 전달함.",
+    "4. 질병청 기탁: Xenium processed data를 질병관리청에 기탁함."
+   ],
+   "source": ""
+  },
+  {
+   "no": 12,
+   "type": "image_trio",
+   "eyebrow": "CLINICAL DATA",
+   "title": "KBN CDM V3.1 세목 조율을 완료하고 Xenium 실시 50명 우선 매칭에 착수함",
+   "images": [
+    {
+     "path": "자산/v3/임상_cdm표.png",
+     "caption": "KBN CDM V3.1 테이블 정의서 발췌"
+    },
+    {
+     "path": "자산/v3/임상_매핑구조.png",
+     "caption": "임상·역학 정보 항목 매핑 구조"
+    },
+    {
+     "path": "자산/v3/임상_연계체계.png",
+     "caption": "병리 이미지–임상 데이터 연계 체계"
+    }
+   ],
+   "bullets": [
+    "KBN CDM V3.1 표준에 맞춰 위암·전립선암·난소암 임상 변수 세목 조율을 완료함.",
+    "질병청 발주부서와 사전 논의(5/21)를 거쳐 용어 정비와 메타데이터 연결 구조를 수립함.",
+    "Xenium 실시 50명을 7/29까지 우선 매칭하고, 등록 892건의 잔여분은 8월부터 순차 매칭함."
+   ],
+   "source": ""
+  },
+  {
+   "no": 13,
+   "type": "diagram_note",
+   "eyebrow": "AI DEVELOPMENT",
+   "title": "HoverNet 개선 학습과 CellVit 최초 학습을 완료하여 투트랙 비교 기반을 확보함",
+   "bullets": [
+    "HoverNet: Instance Segmentation 성능 저하와 Class Imbalance를 HV Loss 가중치 조정, Class-weighted CrossEntropy, Focal Loss 도입으로 개선함.",
+    "CellVit: Vision Transformer 기반 신규 모델을 구축하고 최초 학습을 완료함. 추가 파라미터 튜닝으로 성능 향상이 기대됨.",
+    "동일 평가셋(27,468 패치) 기준으로 두 모델을 비교하여 투트랙 검증 체계를 마련함."
    ],
    "source": "",
+   "image": "자산/v3/ai_cellvit_아키텍처.png",
+   "caption": "CellVit 아키텍처 — ViT Encoder + Multi-branch Decoder"
+  },
+  {
+   "no": 14,
+   "type": "table",
+   "eyebrow": "AI DEVELOPMENT",
+   "title": "CellVit 최초 학습 결과는 HoverNet에 근접하였으며 파라미터 튜닝으로 개선을 추진함",
    "table": {
     "head": [
      "평가 지표",
-     "값",
+     "HoverNet (개선)",
+     "CellVit (최초 학습)",
      "지표 의미"
     ],
     "rows": [
      [
       "DICE",
       "0.6527",
+      "0.6427",
       "분할 영역 중첩도"
      ],
      [
       "AJI",
       "0.2677",
+      "0.2537",
       "개체 단위 일치도"
      ],
      [
       "PQ",
       "0.1963",
+      "0.1782",
       "Panoptic Quality (검출×분할)"
      ],
      [
       "SQ",
       "0.4946",
+      "0.4827",
       "Segmentation Quality"
      ],
      [
       "DQ",
       "0.3038",
+      "0.2792",
       "Detection Quality"
      ]
     ]
-   }
+   },
+   "bullets": [
+    "두 모델 모두 동일 평가셋 27,468 패치 기준으로 산출함.",
+    "CellVit은 최초 학습 단계로 전 지표에서 HoverNet에 소폭 못 미치나, 파라미터 튜닝 여지가 남아 있음.",
+    "투트랙 비교를 통해 공간 바이오마커 연계에 적합한 모델을 선정할 계획임."
+   ],
+   "source": ""
   },
   {
-   "no": 11,
+   "no": 15,
    "type": "image_text",
    "eyebrow": "PUBLICATIONS",
    "title": "계약 요구사항인 논문 2건 목표 대비 SCI Q1 저널 2편 게재 달성 완료",
@@ -465,7 +571,7 @@
    "source": ""
   },
   {
-   "no": 12,
+   "no": 16,
    "type": "table",
    "eyebrow": "SCOPE OF WORK",
    "title": "제1세부 주관기관으로서 데이터 구축·인프라 제공·총괄 관리 역무를 이행 중임",
@@ -521,10 +627,10 @@
    "source": ""
   },
   {
-   "no": 13,
+   "no": 17,
    "type": "table",
    "eyebrow": "BUDGET EXECUTION",
-   "title": "2026-05-27 기준 사업비 88.6백만 원(29.5%) 집행 및 7~8월 시약비 집행 확정",
+   "title": "2026-07-27 기준 사업비 101.4백만 원(33.8%) 집행, 하반기 시약비 집행이 확정됨",
    "kpis": [
     {
      "label": "총 사업비",
@@ -535,33 +641,33 @@
     },
     {
      "label": "누적 집행액",
-     "value": "88.6",
+     "value": "101.4",
      "unit": "백만원",
-     "note": "집행률 29.5% (2026-05-27 기준)",
+     "note": "집행률 33.8% · 2026-07-27 기준",
      "watch": false
     },
     {
-     "label": "어반 집행률",
-     "value": "32.21",
+     "label": "길의료재단 집행률",
+     "value": "58.83",
      "unit": "%",
-     "note": "20.3백만원 집행",
+     "note": "51.2백만원 집행",
      "watch": false
     },
     {
-     "label": "길병원 집행률",
-     "value": "52.90",
+     "label": "포트래이 집행률",
+     "value": "17.96",
      "unit": "%",
-     "note": "46.0백만원 집행",
-     "watch": false
+     "note": "7~8월 시약비 정산 예정",
+     "watch": true
     }
    ],
    "table": {
     "head": [
      "주관 / 참여기관",
      "2차년도 사업비",
-     "누계 집행액 (2026-05-27 기준)",
-     "집행률 (%)",
-     "비고 및 주요 집행 항목"
+     "누계 집행액",
+     "집행률",
+     "주요 집행 항목"
     ],
     "rows": [
      [
@@ -569,39 +675,40 @@
       "63,000,000원",
       "20,296,612원",
       "32.21%",
-      "인건비 및 데이터 구축 인프라 비용"
+      "인건비 및 데이터 구축 인프라"
      ],
      [
       "㈜포트래이 (공동)",
       "150,000,000원",
-      "22,325,771원",
-      "14.88%",
-      "Xenium 5K 패널 시약비 (7-8월 대량 정산 예정)"
+      "29,936,083원",
+      "17.96%",
+      "Xenium 5K 패널 시약비"
      ],
      [
       "의료법인 길의료재단 (공동)",
       "87,000,000원",
-      "46,027,242원",
-      "52.90%",
-      "AI 모델 개발 및 데이터 전처리 연구비"
+      "51,176,435원",
+      "58.83%",
+      "AI 모델 개발 및 데이터 전처리"
      ],
      [
       "합계",
       "300,000,000원",
-      "88,649,625원",
-      "29.50%",
-      "2026-05-27 집행 잔액 211,350,375원"
+      "101,409,130원",
+      "33.80%",
+      "잔액 198,590,870원"
      ]
     ]
    },
    "bullets": [
-    "2026-05-27 기준 총 사업비 3억 원 중 8,864만 원을 집행하여 29.5%의 집행률을 보임.",
-    "포트래이의 경우 Xenium 5K Prime Panel 주문이 완료되어, 7~8월 공간전사체 생산비 정산 시 대폭 상승할 예정임."
+    "길의료재단 집행률이 58.83%로 상승하여 전체 집행률이 33.8%가 됨 (2026-07-27 기준).",
+    "포트래이는 7~8월 Xenium 시약비 대량 정산이 예정되어 집행률이 크게 상승할 전망임.",
+    "잔여 예산 198,590,870원은 하반기 리뷰·연계·기탁 과업에 배분함."
    ],
    "source": ""
   },
   {
-   "no": 14,
+   "no": 18,
    "type": "list",
    "eyebrow": "NEXT STEPS",
    "title": "전문의 리뷰·임상 연계·CODA 기탁을 하반기 3대 과제로 집중 추진함",
@@ -615,7 +722,7 @@
    "source": ""
   },
   {
-   "no": 15,
+   "no": 19,
    "type": "closing",
    "eyebrow": "THANK YOU",
    "title": "감사합니다",

@@ -60,6 +60,9 @@ SUPPORTED_TYPES = {
     "timeline",
     "image_text",
     "image_grid",
+    "image_pair_note",
+    "diagram_note",
+    "image_trio",
     "table",
     "list",
     "closing",
@@ -117,6 +120,31 @@ def validate_content(data: dict[str, Any]) -> None:
             raise ValueError(f"{no}번 슬라이드 bullets는 최대 5개입니다.")
         if slide_type == "timeline" and len(item.get("events", [])) != 6:
             raise ValueError(f"{no}번 타임라인은 월별 6칸이어야 합니다.")
+        if slide_type in {"image_pair_note", "image_trio"}:
+            required_count = 2 if slide_type == "image_pair_note" else 3
+            visuals = item.get("images")
+            if not isinstance(visuals, list) or len(visuals) != required_count:
+                raise ValueError(
+                    f"{no}번 {slide_type}의 images는 정확히 {required_count}개여야 합니다."
+                )
+            for visual_index, visual in enumerate(visuals):
+                if not isinstance(visual, dict) or not str(visual.get("path", "")).strip():
+                    raise ValueError(
+                        f"{no}번 images[{visual_index}]에는 path가 필요합니다."
+                    )
+                if not str(visual.get("caption", "")).strip():
+                    raise ValueError(
+                        f"{no}번 images[{visual_index}]에는 caption이 필요합니다."
+                    )
+        if slide_type == "image_pair_note" and not str(
+            item.get("note_title", "")
+        ).strip():
+            raise ValueError(f"{no}번 image_pair_note에는 note_title이 필요합니다.")
+        if slide_type == "diagram_note":
+            if not str(item.get("image", "")).strip():
+                raise ValueError(f"{no}번 diagram_note에는 image가 필요합니다.")
+            if not str(item.get("caption", "")).strip():
+                raise ValueError(f"{no}번 diagram_note에는 caption이 필요합니다.")
 
 
 def add_text(
@@ -535,6 +563,67 @@ def add_insight_cards(
         )
 
 
+def add_key_points_card(
+    s: Slide,
+    bullets: list[str],
+    x: float,
+    y: float,
+    w: float,
+    h: float,
+) -> None:
+    """Add one native KEY POINTS card with a compact two-row bullet grid."""
+    s.rect(x, y, w, h, fill=s.c["surface"], line=s.c["border"], radius=14)
+    s.rect(x, y, 5, h, fill=s.c["accent"])
+    add_text(
+        s,
+        x + 24,
+        y + 22,
+        150,
+        24,
+        "KEY POINTS",
+        T.CAPTION,
+        color=s.c["accent"],
+        secondary=True,
+    )
+    if not bullets:
+        return
+
+    content_x = x + 190
+    content_w = w - 214
+    columns = min(3, len(bullets))
+    rows = (len(bullets) + columns - 1) // columns
+    col_gap = GRID_GAP
+    row_gap = 10
+    cell_w = (content_w - col_gap * (columns - 1)) / columns
+    cell_h = (h - 32 - row_gap * (rows - 1)) / rows
+    for idx, bullet in enumerate(bullets):
+        col = idx % columns
+        row = idx // columns
+        left = content_x + col * (cell_w + col_gap)
+        top = y + 16 + row * (cell_h + row_gap)
+        add_text(
+            s,
+            left,
+            top + 2,
+            22,
+            22,
+            "•",
+            T.CAPTION,
+            color=s.c["accent"],
+        )
+        add_text(
+            s,
+            left + 22,
+            top,
+            cell_w - 22,
+            cell_h,
+            bullet,
+            STYLE_BODY_COMPACT,
+            color=s.c["text2"],
+            anchor=MSO_ANCHOR.MIDDLE,
+        )
+
+
 def render_cover(
     deck: Deck,
     item: dict[str, Any],
@@ -810,6 +899,123 @@ def render_image_grid(deck: Deck, item: dict[str, Any], content_dir: Path) -> No
     add_footer(s, item["no"])
 
 
+def render_image_pair_note(
+    deck: Deck,
+    item: dict[str, Any],
+    content_dir: Path,
+) -> None:
+    """Render two contained result images and one native explanation card."""
+    s = deck.slide(theme=THEME)
+    add_header(s, item)
+    visuals = image_items(item)
+    image_area_w = grid_span(8)
+    card_w = grid_span(4)
+    image_w = (image_area_w - GRID_GAP) / 2
+
+    for idx, visual in enumerate(visuals):
+        image_card(
+            s,
+            SAFE_X + idx * (image_w + GRID_GAP),
+            CONTENT_Y,
+            image_w,
+            496,
+            resolve_asset(content_dir, visual["path"]),
+            visual["caption"],
+        )
+
+    note_x = SAFE_X + image_area_w + GRID_GAP
+    s.rect(
+        note_x,
+        CONTENT_Y,
+        card_w,
+        496,
+        fill=s.c["surface"],
+        line=s.c["border"],
+        radius=14,
+    )
+    s.rect(note_x, CONTENT_Y, 5, 496, fill=s.c["accent"])
+    add_text(
+        s,
+        note_x + 24,
+        CONTENT_Y + 26,
+        card_w - 48,
+        62,
+        str(item["note_title"]),
+        T.H3,
+        color=s.c["text"],
+    )
+    s.line(note_x + 24, CONTENT_Y + 104, card_w - 48, s.c["border"], thickness=1)
+    add_bullets(
+        s,
+        item.get("bullets", []),
+        note_x + 24,
+        CONTENT_Y + 130,
+        card_w - 48,
+        328,
+        compact=True,
+    )
+    add_footer(s, item["no"])
+
+
+def render_diagram_note(
+    deck: Deck,
+    item: dict[str, Any],
+    content_dir: Path,
+) -> None:
+    """Render one wide, uncropped architecture diagram and a native note card."""
+    s = deck.slide(theme=THEME)
+    add_header(s, item)
+    image_card(
+        s,
+        SAFE_X,
+        CONTENT_Y,
+        SAFE_W,
+        330,
+        resolve_asset(content_dir, str(item["image"])),
+        str(item["caption"]),
+    )
+    add_key_points_card(
+        s,
+        item.get("bullets", []),
+        SAFE_X,
+        CONTENT_Y + 354,
+        SAFE_W,
+        142,
+    )
+    add_footer(s, item["no"])
+
+
+def render_image_trio(
+    deck: Deck,
+    item: dict[str, Any],
+    content_dir: Path,
+) -> None:
+    """Render three contained images with captions and one KEY POINTS card."""
+    s = deck.slide(theme=THEME)
+    add_header(s, item)
+    visuals = image_items(item)
+    card_w = grid_span(4)
+    for idx, visual in enumerate(visuals):
+        image_card(
+            s,
+            SAFE_X + idx * (card_w + GRID_GAP),
+            CONTENT_Y,
+            card_w,
+            330,
+            resolve_asset(content_dir, visual["path"]),
+            visual["caption"],
+        )
+    add_key_points_card(
+        s,
+        item.get("bullets", []),
+        SAFE_X,
+        CONTENT_Y + 354,
+        SAFE_W,
+        142,
+    )
+    add_footer(s, item["no"])
+
+
 def render_table(deck: Deck, item: dict[str, Any]) -> None:
     s = deck.slide(theme=THEME)
     add_header(s, item)
@@ -910,6 +1116,11 @@ def build_deck(data: dict[str, Any], content_path: Path, output_path: Path) -> P
         "timeline": lambda item: render_timeline(deck, item),
         "image_text": lambda item: render_image_text(deck, item, content_dir),
         "image_grid": lambda item: render_image_grid(deck, item, content_dir),
+        "image_pair_note": lambda item: render_image_pair_note(
+            deck, item, content_dir
+        ),
+        "diagram_note": lambda item: render_diagram_note(deck, item, content_dir),
+        "image_trio": lambda item: render_image_trio(deck, item, content_dir),
         "table": lambda item: render_table(deck, item),
         "list": lambda item: render_list(deck, item),
         "closing": lambda item: render_closing(deck, item),
