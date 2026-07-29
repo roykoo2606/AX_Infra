@@ -3,10 +3,13 @@
 ## 구조 한 장
 
 ```
+launchd (ai.hermes.gateway)                    ← Discord 게이트웨이
+ └─ hermes   keepalive + runatload — 크래시·로그인 시 자동 기동
+
 tmux (ax 세션, 재부팅 시 launchd 자동 기동)     ← 무인 상시 서비스
- ├─ hermes   Discord 게이트웨이 (크래시 시 자동 재시작)
  └─ watcher  이벤트 스크립트 supervisor (`scripts/watcher.sh`)
-             └─ rpb-daily: 연구기획 데일리 스캔/브리프
+             ├─ rpb-daily:   연구기획 데일리 스캔/브리프
+             └─ log-rotate:  6시간마다 상시 서비스 로그 회전
 
 cmux (관제·작업 화면)                          ← 인터랙티브 에이전트
  ┌─────────────┬─────────────┐
@@ -55,7 +58,7 @@ scripts/install-autostart.sh                         # 재부팅 자동 기동
 
 ## 문제 해결
 
-- 서비스 상태: `tmux ls` → "ax: 2 windows"가 정상
+- 서비스 상태: `tmux ls` → "ax: 1 windows"(watcher). hermes는 `hermes gateway status`로 별도 확인
 - 서비스 재시작: `tmux kill-session -t ax && scripts/start.sh`
 - 화면이 꼬임: 워크스페이스 닫고 새로 만들어 `axx`
 - ⚠ **재기동 시 에이전트가 자동 복원 안 됨**: cmux Settings의 **Claude Code hooks** 토글이 꺼진 경우
@@ -75,3 +78,15 @@ scripts/install-autostart.sh                         # 재부팅 자동 기동
 
 빈 패인에서 명령만 치면 해당 프로젝트 경로로 3분할 관제 화면이 구성된다.
 Urban_AX 포트폴리오·병렬 운영 계획은 `~/Urban_AX/ROADMAP.md` 참조.
+
+## Hermes 게이트웨이 (2026-07-29 구조 정정)
+
+- **launchd가 단독 관리**한다 (`ai.hermes.gateway`, `keepalive | runatload`).
+  tmux에서 중복 실행하면 "Gateway already running"으로 5초마다 실패하며 로그만 채운다 —
+  2026-07-29에 `start.sh`에서 hermes 창을 제거했다.
+- 상태 확인: `hermes gateway status` · 재시작: `hermes gateway restart`
+- 재시작 시 CLI가 "launchd cannot manage… exit 5"를 출력할 수 있으나 **오탐**이다.
+  `launchctl print gui/$(id -u)/ai.hermes.gateway`로 `state = running`과 keepalive를 확인할 것.
+- **Discord 연결이 끊기면 프로세스는 살아 있어도 무응답이다.** 프로세스 확인만으로는 부족하다.
+  판별: `~/.hermes/logs/gateway.log`의 마지막 `✓ discord connected` 시각과
+  `gateway.error.log`의 `ClientConnectorDNSError` 누적 여부. 복구는 `hermes gateway restart`.

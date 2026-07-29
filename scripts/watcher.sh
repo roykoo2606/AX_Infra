@@ -24,6 +24,8 @@ mkdir -p "$LOG_DIR"
 # rpb-daily moved to the Urban_AX root (2026-07-28); its logs live there too.
 SERVICES=(
   "rpb-daily|RPB_RUN_ON_START=${RPB_RUN_ON_START:-0} '/Users/roysmac/Urban_AX/scripts/rpb-daily.sh'|10"
+  # 상시 서비스 로그가 무한히 커지지 않도록 6시간마다 임계치 초과분만 회전
+  "log-rotate|while true; do '/Users/roysmac/Claude/Projects/AX_Infra/scripts/rotate-logs.sh' >/dev/null 2>&1; sleep 21600; done|60"
 )
 
 log() {
