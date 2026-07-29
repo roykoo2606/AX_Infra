@@ -63,6 +63,8 @@ SUPPORTED_TYPES = {
     "image_pair_note",
     "diagram_note",
     "image_trio",
+    "ai_issue",
+    "ai_result",
     "table",
     "list",
     "closing",
@@ -145,6 +147,63 @@ def validate_content(data: dict[str, Any]) -> None:
                 raise ValueError(f"{no}번 diagram_note에는 image가 필요합니다.")
             if not str(item.get("caption", "")).strip():
                 raise ValueError(f"{no}번 diagram_note에는 caption이 필요합니다.")
+        if slide_type == "ai_issue":
+            issues = item.get("issues")
+            if not isinstance(issues, list) or len(issues) != 2:
+                raise ValueError(f"{no}번 ai_issue의 issues는 정확히 2개여야 합니다.")
+            for issue_index, issue in enumerate(issues):
+                if not isinstance(issue, dict) or not str(
+                    issue.get("title", "")
+                ).strip():
+                    raise ValueError(
+                        f"{no}번 issues[{issue_index}]에는 title이 필요합니다."
+                    )
+                points = issue.get("points")
+                if not isinstance(points, list) or not points:
+                    raise ValueError(
+                        f"{no}번 issues[{issue_index}]에는 points가 필요합니다."
+                    )
+                if len(points) > 5:
+                    raise ValueError(
+                        f"{no}번 issues[{issue_index}].points는 최대 5개입니다."
+                    )
+            visuals = item.get("images")
+            if not isinstance(visuals, list) or len(visuals) != 3:
+                raise ValueError(f"{no}번 ai_issue의 images는 정확히 3개여야 합니다.")
+            for visual_index, visual in enumerate(visuals):
+                if not isinstance(visual, dict) or not str(
+                    visual.get("path", "")
+                ).strip():
+                    raise ValueError(
+                        f"{no}번 images[{visual_index}]에는 path가 필요합니다."
+                    )
+                if not str(visual.get("caption", "")).strip():
+                    raise ValueError(
+                        f"{no}번 images[{visual_index}]에는 caption이 필요합니다."
+                    )
+        if slide_type == "ai_result":
+            for key in ("report", "diagram"):
+                visual = item.get(key)
+                if not isinstance(visual, dict) or not str(
+                    visual.get("path", "")
+                ).strip():
+                    raise ValueError(f"{no}번 ai_result의 {key}.path가 필요합니다.")
+                if not str(visual.get("caption", "")).strip():
+                    raise ValueError(f"{no}번 ai_result의 {key}.caption이 필요합니다.")
+            squares = item.get("squares")
+            if not isinstance(squares, list) or len(squares) != 2:
+                raise ValueError(f"{no}번 ai_result의 squares는 정확히 2개여야 합니다.")
+            for square_index, square in enumerate(squares):
+                if not isinstance(square, dict) or not str(
+                    square.get("path", "")
+                ).strip():
+                    raise ValueError(
+                        f"{no}번 squares[{square_index}]에는 path가 필요합니다."
+                    )
+                if not str(square.get("caption", "")).strip():
+                    raise ValueError(
+                        f"{no}번 squares[{square_index}]에는 caption이 필요합니다."
+                    )
 
 
 def add_text(
@@ -404,6 +463,44 @@ def image_card(
         caption_h - 16,
         caption,
         T.CAPTION,
+        color=s.c["text2"],
+    )
+    return picture
+
+
+def compact_image_card(
+    s: Slide,
+    x: float,
+    y: float,
+    w: float,
+    h: float,
+    path: Path,
+    caption: str,
+    *,
+    caption_h: float = 34,
+) -> Any:
+    """Add a dense contain-only image card with a native caption bar."""
+    s.rect(x, y, w, h, fill=s.c["surface"], line=s.c["border"], radius=14)
+    picture = add_picture_contain(
+        s,
+        x,
+        y,
+        w,
+        h - caption_h,
+        path,
+        description=caption,
+        radius=14,
+    )
+    s.rect(x, y + h - caption_h, w, caption_h, fill=s.c["canvas"])
+    s.rect(x, y + h - caption_h, 4, caption_h, fill=s.c["accent"])
+    add_text(
+        s,
+        x + 16,
+        y + h - caption_h + 7,
+        w - 28,
+        caption_h - 10,
+        caption,
+        STYLE_CAPTION_COMPACT,
         color=s.c["text2"],
     )
     return picture
@@ -1016,6 +1113,147 @@ def render_image_trio(
     add_footer(s, item["no"])
 
 
+def render_ai_issue(
+    deck: Deck,
+    item: dict[str, Any],
+    content_dir: Path,
+) -> None:
+    """Render two native issue cards and all three supplied response images."""
+    s = deck.slide(theme=THEME)
+    add_header(s, item)
+    issue_w = grid_span(5)
+    image_w = grid_span(7)
+    issue_gap = GRID_GAP
+    issue_h = (496 - issue_gap) / 2
+
+    for idx, issue in enumerate(item["issues"]):
+        top = CONTENT_Y + idx * (issue_h + issue_gap)
+        s.rect(
+            SAFE_X,
+            top,
+            issue_w,
+            issue_h,
+            fill=s.c["surface"],
+            line=s.c["border"],
+            radius=14,
+        )
+        s.rect(SAFE_X, top, 5, issue_h, fill=s.c["accent"])
+        add_text(
+            s,
+            SAFE_X + 24,
+            top + 20,
+            84,
+            22,
+            f"ISSUE {idx + 1:02d}",
+            T.META,
+            color=s.c["accent"],
+            secondary=True,
+        )
+        add_text(
+            s,
+            SAFE_X + 24,
+            top + 54,
+            issue_w - 48,
+            48,
+            str(issue["title"]),
+            T.H3,
+            color=s.c["text"],
+        )
+        s.line(SAFE_X + 24, top + 112, issue_w - 48, s.c["border"], thickness=1)
+        add_bullets(
+            s,
+            issue["points"],
+            SAFE_X + 24,
+            top + 132,
+            issue_w - 48,
+            issue_h - 152,
+            compact=True,
+        )
+
+    visual_x = SAFE_X + issue_w + GRID_GAP
+    image_gap = 12
+    image_h = (496 - image_gap * 2) / 3
+    for idx, visual in enumerate(item["images"]):
+        compact_image_card(
+            s,
+            visual_x,
+            CONTENT_Y + idx * (image_h + image_gap),
+            image_w,
+            image_h,
+            resolve_asset(content_dir, str(visual["path"])),
+            str(visual["caption"]),
+        )
+    add_footer(s, item["no"])
+
+
+def render_ai_result(
+    deck: Deck,
+    item: dict[str, Any],
+    content_dir: Path,
+) -> None:
+    """Render the reusable HoverNet/CellVit four-image result composition."""
+    s = deck.slide(theme=THEME)
+    add_header(s, item)
+    bullets = item.get("bullets", [])
+    gap = 14
+    key_h = 76 if len(bullets) <= 3 else 112
+
+    report = item["report"]
+    # 리포트 이미지는 가로세로비가 6.9:1 ~ 2.6:1 로 크게 다르다.
+    # 카드 높이를 고정하면 좁은 쪽에 흰 여백이 크게 남으므로 원본 비율에 맞춘다.
+    with Image.open(resolve_asset(content_dir, str(report["path"]))) as _im:
+        _ratio = _im.width / _im.height
+    caption_h = 30
+    # 상한을 두지 않으면 세로가 긴 리포트가 아래 이미지 영역을 잠식한다.
+    # 아래 행에 최소 180px 를 남기도록 상한을 215px 로 둔다.
+    report_h = min(215, max(120, SAFE_W / _ratio + caption_h))
+    lower_h = 496 - report_h - key_h - gap * 2
+    compact_image_card(
+        s,
+        SAFE_X,
+        CONTENT_Y,
+        SAFE_W,
+        report_h,
+        resolve_asset(content_dir, str(report["path"])),
+        str(report["caption"]),
+    )
+
+    lower_y = CONTENT_Y + report_h + gap
+    left_w = grid_span(6)
+    square_gap = 16
+    square_w = (left_w - square_gap) / 2
+    for idx, visual in enumerate(item["squares"]):
+        compact_image_card(
+            s,
+            SAFE_X + idx * (square_w + square_gap),
+            lower_y,
+            square_w,
+            lower_h,
+            resolve_asset(content_dir, str(visual["path"])),
+            str(visual["caption"]),
+        )
+
+    diagram = item["diagram"]
+    compact_image_card(
+        s,
+        SAFE_X + left_w + GRID_GAP,
+        lower_y,
+        grid_span(6),
+        lower_h,
+        resolve_asset(content_dir, str(diagram["path"])),
+        str(diagram["caption"]),
+    )
+    add_key_points_card(
+        s,
+        bullets,
+        SAFE_X,
+        lower_y + lower_h + gap,
+        SAFE_W,
+        key_h,
+    )
+    add_footer(s, item["no"])
+
+
 def render_table(deck: Deck, item: dict[str, Any]) -> None:
     s = deck.slide(theme=THEME)
     add_header(s, item)
@@ -1121,6 +1359,8 @@ def build_deck(data: dict[str, Any], content_path: Path, output_path: Path) -> P
         ),
         "diagram_note": lambda item: render_diagram_note(deck, item, content_dir),
         "image_trio": lambda item: render_image_trio(deck, item, content_dir),
+        "ai_issue": lambda item: render_ai_issue(deck, item, content_dir),
+        "ai_result": lambda item: render_ai_result(deck, item, content_dir),
         "table": lambda item: render_table(deck, item),
         "list": lambda item: render_list(deck, item),
         "closing": lambda item: render_closing(deck, item),
@@ -1155,6 +1395,7 @@ def main(argv: list[str]) -> int:
         if shape.shape_type == MSO_SHAPE_TYPE.PICTURE
     )
     expected_pictures = sum(len(image_items(item)) for item in data["slides"])
+    expected_pictures += 4 * sum(item["type"] == "ai_result" for item in data["slides"])
     expected_pictures += 5 * sum(item["type"] == "cover" for item in data["slides"])
     if picture_count != expected_pictures:
         raise RuntimeError(

@@ -70,11 +70,13 @@ def main(path):
     if abs(Emu(prs.slide_width).inches - 13.333) > 0.01:
         fails.append("슬라이드 폭이 13.333in이 아님")
 
-    # 0) 대외 부적합 이미지 — 터미널·콘솔 캡처가 보고서에 섞이지 않도록
+    # 0) 콘솔 캡처 — 기본은 네이티브 표로 대체하나, 원자료를 그대로 싣기로 한 경우
+    #    (2026-07-29 결정: 문승완 자료 3장은 이미지 전량 사용)에는 경고만 남긴다.
+    CONSOLE_SIZES = {(1709, 247), (1720, 650)}
     for i, s in enumerate(prs.slides, 1):
         for sh in s.shapes:
-            if sh.shape_type == 13 and sh.image.size == (1709, 247):
-                fails.append(f"슬라이드 {i}: 콘솔 캡처 이미지 — 네이티브 표로 대체할 것")
+            if sh.shape_type == 13 and sh.image.size in CONSOLE_SIZES:
+                warns.append(f"슬라이드 {i}: 콘솔 캡처 이미지 — 의도한 것인지 확인")
 
     # 1) 네이티브 여부 — 사진은 허용, 슬라이드 전면 래스터는 금지
     print("\n[네이티브 검사]")

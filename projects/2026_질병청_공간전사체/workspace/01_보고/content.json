@@ -485,20 +485,102 @@
   },
   {
    "no": 13,
-   "type": "diagram_note",
+   "type": "ai_issue",
    "eyebrow": "AI DEVELOPMENT",
-   "title": "HoverNet 개선 학습과 CellVit 최초 학습을 완료하여 투트랙 비교 기반을 확보함",
-   "bullets": [
-    "HoverNet: Instance Segmentation 성능 저하와 Class Imbalance를 HV Loss 가중치 조정, Class-weighted CrossEntropy, Focal Loss 도입으로 개선함.",
-    "CellVit: Vision Transformer 기반 신규 모델을 구축하고 최초 학습을 완료함. 추가 파라미터 튜닝으로 성능 향상이 기대됨.",
-    "동일 평가셋(27,468 패치) 기준으로 두 모델을 비교하여 투트랙 검증 체계를 마련함."
+   "title": "HoverNet 모델 개선 사항을 반영하여 학습을 진행함",
+   "issues": [
+    {
+     "title": "Instance Segmentation 성능 저하",
+     "points": [
+      "개별 세포핵 구분 성능 개선 필요",
+      "HV Loss 가중치 조정 — Loss Weight 파라미터 튜닝을 통한 HV 계열 가중치 강화"
+     ]
+    },
+    {
+     "title": "Class Imbalance로 인한 성능 저하",
+     "points": [
+      "클래스 분포에 따른 classification·segmentation 성능차 개선 필요",
+      "Class별 loss에 가중치가 적용된 Loss로 조정",
+      "난이도가 높은 샘플을 상정한 Focal Loss 도입"
+     ]
+    }
    ],
-   "source": "",
-   "image": "자산/v3/ai_cellvit_아키텍처.png",
-   "caption": "CellVit 아키텍처 — ViT Encoder + Multi-branch Decoder"
+   "images": [
+    {
+     "path": "자산/ai/s4_1_문제정의.png",
+     "caption": "문제 정의 — 세포핵 구분 성능"
+    },
+    {
+     "path": "자산/ai/s4_2_HVLoss조정.png",
+     "caption": "HV Loss 가중치 조정"
+    },
+    {
+     "path": "자산/ai/s4_3_ClassImbalance.png",
+     "caption": "Class Imbalance 대응"
+    }
+   ],
+   "source": ""
   },
   {
    "no": 14,
+   "type": "ai_result",
+   "eyebrow": "AI DEVELOPMENT",
+   "title": "지난달 개선사항이 반영된 HoverNet 모델의 성능을 확인함",
+   "report": {
+    "path": "자산/ai/s5_1_hovernet_report.png",
+    "caption": "HoverNet Segmentation Report · 평가 패치 27,468"
+   },
+   "squares": [
+    {
+     "path": "자산/ai/s5_3_seg_a.png",
+     "caption": "세포 분할 결과 (1)"
+    },
+    {
+     "path": "자산/ai/s5_4_seg_b.png",
+     "caption": "세포 분할 결과 (2)"
+    }
+   ],
+   "diagram": {
+    "path": "자산/ai/s5_2_hovernet_아키텍처.png",
+    "caption": "HoverNet 아키텍처 — NP · HoVer · NC Branch"
+   },
+   "bullets": [
+    "DICE 0.6527 · AJI 0.2677 · PQ 0.1963 · SQ 0.4946 · DQ 0.3038",
+    "Loss 개선을 반영한 학습으로 세포핵 경계 구분이 향상됨."
+   ],
+   "source": ""
+  },
+  {
+   "no": 15,
+   "type": "ai_result",
+   "eyebrow": "AI DEVELOPMENT",
+   "title": "CellVit 모델 최초 학습 결과를 확보하였으며 파라미터 튜닝으로 성능 향상이 기대됨",
+   "report": {
+    "path": "자산/ai/s6_1_cellvit_report.png",
+    "caption": "CellVit Segmentation Report · 평가 패치 27,468"
+   },
+   "squares": [
+    {
+     "path": "자산/ai/s6_3_seg_a.png",
+     "caption": "세포 분할 결과 (1)"
+    },
+    {
+     "path": "자산/ai/s6_4_seg_b.png",
+     "caption": "세포 분할 결과 (2)"
+    }
+   ],
+   "diagram": {
+    "path": "자산/ai/s6_2_cellvit_아키텍처.png",
+    "caption": "CellVit 아키텍처 — ViT Encoder + Multi-branch Decoder"
+   },
+   "bullets": [
+    "DICE 0.6427 · AJI 0.2537 · PQ 0.1782 · SQ 0.4827 · DQ 0.2792",
+    "Vision Transformer 기반 신규 모델의 최초 학습 결과로, 추가 파라미터 튜닝 여지가 있음."
+   ],
+   "source": ""
+  },
+  {
+   "no": 16,
    "type": "table",
    "eyebrow": "AI DEVELOPMENT",
    "title": "CellVit 최초 학습 결과는 HoverNet에 근접하였으며 파라미터 튜닝으로 개선을 추진함",
@@ -550,7 +632,7 @@
    "source": ""
   },
   {
-   "no": 15,
+   "no": 17,
    "type": "image_text",
    "eyebrow": "PUBLICATIONS",
    "title": "계약 요구사항인 논문 2건 목표 대비 SCI Q1 저널 2편 게재 달성 완료",
@@ -571,7 +653,7 @@
    "source": ""
   },
   {
-   "no": 16,
+   "no": 18,
    "type": "table",
    "eyebrow": "SCOPE OF WORK",
    "title": "제1세부 주관기관으로서 데이터 구축·인프라 제공·총괄 관리 역무를 이행 중임",
@@ -627,7 +709,7 @@
    "source": ""
   },
   {
-   "no": 17,
+   "no": 19,
    "type": "table",
    "eyebrow": "BUDGET EXECUTION",
    "title": "2026-07-27 기준 사업비 101.4백만 원(33.8%) 집행, 하반기 시약비 집행이 확정됨",
@@ -708,7 +790,7 @@
    "source": ""
   },
   {
-   "no": 18,
+   "no": 20,
    "type": "list",
    "eyebrow": "NEXT STEPS",
    "title": "전문의 리뷰·임상 연계·CODA 기탁을 하반기 3대 과제로 집중 추진함",
@@ -722,7 +804,7 @@
    "source": ""
   },
   {
-   "no": 19,
+   "no": 21,
    "type": "closing",
    "eyebrow": "THANK YOU",
    "title": "감사합니다",
