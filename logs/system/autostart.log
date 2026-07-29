@@ -1,2 +1,5 @@
 [ax] 세션 시작됨: claude / codex / anti / watcher
      접속: tmux attach -t ax
+[ax] 서비스 세션이 이미 실행 중입니다 → scripts/view.sh hermes 로 확인
+[ax] 상시 서비스 시작됨: hermes / watcher
+[ax] 상시 서비스 시작됨: hermes / watcher

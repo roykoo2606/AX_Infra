@@ -1,0 +1,5 @@
+[2026-07-29 09:35:14] [watcher] LOOP: watcher supervisor started (2 service(s))
+[2026-07-29 09:35:14] [watcher] START: rpb-daily -> RPB_RUN_ON_START=0 '/Users/roysmac/Urban_AX/scripts/rpb-daily.sh'
+[2026-07-29 09:35:14] [watcher] PID: rpb-daily=55411
+[2026-07-29 09:35:14] [watcher] START: log-rotate -> while true; do '/Users/roysmac/Claude/Projects/AX_Infra/scripts/rotate-logs.sh' >/dev/null 2>&1; sleep 21600; done
+[2026-07-29 09:35:14] [watcher] PID: log-rotate=55420
